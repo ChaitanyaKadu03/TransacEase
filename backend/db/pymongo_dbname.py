@@ -1,4 +1,4 @@
-from pymongo_get_database import get_database
+from db.pymongo_get_database import get_database
 
 dbname = get_database()
 

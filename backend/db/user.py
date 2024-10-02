@@ -1,6 +1,6 @@
-from pymongo_get_database import get_database
-from transaction import add_transaction_db
-from userstatistics import add_statistics_db
+from db.pymongo_get_database import get_database
+from db.transaction import add_transaction_db
+from db.userstatistics import add_statistics_db
 from bson.objectid import ObjectId
 import datetime
 
