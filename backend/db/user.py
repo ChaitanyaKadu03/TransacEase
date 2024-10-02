@@ -1,5 +1,5 @@
 from db.pymongo_get_database import get_database
-from db.transaction import add_transaction_db
+from db.transaction import add_transaction_db, delete_transaction_db
 from db.userstatistics import add_statistics_db
 from bson.objectid import ObjectId
 import datetime
@@ -19,7 +19,7 @@ def add_user_db(user):
         "type": "DEBITED",
         "category": "purchase",
         "date": datetime.datetime.now(),
-        "amount": "825",
+        "amount": 825,
         "currency": "₹",
         "proof": None,
         "paymentType": "Cash"
@@ -30,7 +30,8 @@ def add_user_db(user):
     add_statistics_db(newUser.inserted_id)
     
     return {
-        "msg": "User Added Successfully"
+        "msg": "User Added Successfully",
+        "userId": str(newUser.inserted_id)
     }
 
 def update_user_db(userId,newuser):
@@ -48,6 +49,8 @@ def update_user_db(userId,newuser):
 
 def delete_user_db(userId):
     user_collection.find_one_and_delete({'_id': ObjectId(userId)})
+    
+    delete_transaction_db(userId)
     
     return {
         "msg": "Deleted successfully!",

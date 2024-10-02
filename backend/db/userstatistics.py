@@ -1,5 +1,7 @@
 from db.pymongo_get_database import get_database
+from bson.json_util import dumps
 from bson.objectid import ObjectId
+import json
 
 dbname = get_database()
 
@@ -20,14 +22,29 @@ def add_statistics_db(userId):
     }
     
 def update_statistics_db(userId, newStatistics):
-    statistics_collection.find_one_and_update(
+     
+    data = statistics_collection.find_one_and_update(
         {
-            "userId": userId
+            "userId": ObjectId(userId)
         },
         {
-            "$set": 
-                {
-                    newStatistics
-                }   
+            "$set": newStatistics
         }
         )
+    
+    return {
+        "msg": "Updated the statistics!"
+    }
+    
+def get_statistics_db(userId):
+     
+    data = statistics_collection.find_one(
+        {
+            "userId": ObjectId(userId)
+        }
+    )
+    
+    return {
+        "msg": "Found the statistics!",
+        "data": json.loads(dumps(data))
+    }
