@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
@@ -20,15 +22,19 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
+import { useRecoilValue } from "recoil"
+import { currentPage, Pages } from "@/lib/state"
 
 const Header = () => {
+    const thecurrentPage = useRecoilValue<Pages>(currentPage)
+
     return (
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:px-6 sm:ml-14 sm:py-4 sm:bg-transparent">
             <Breadcrumb className="hidden md:flex">
                 <BreadcrumbList>
                     <BreadcrumbItem>
                         <BreadcrumbLink asChild>
-                            <Link href="/api/user/dashboard" className="text-lg font-semibold">Dashboard</Link>
+                            <Link href="/api/user/dashboard" className="text-lg font-semibold">{thecurrentPage}</Link>
                         </BreadcrumbLink>
                     </BreadcrumbItem>
                 </BreadcrumbList>

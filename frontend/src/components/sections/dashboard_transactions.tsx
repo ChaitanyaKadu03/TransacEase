@@ -77,6 +77,7 @@ const Dashboard_transactions = () => {
 
         get_all_transactions()
     }, [])
+    
     return (
         <Tabs defaultValue="week" className="sm:ml-20 sm:mr-8 mt-6 max-sm:mx-4">
             <div className="flex items-center">

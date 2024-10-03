@@ -1,16 +1,16 @@
 import { atom } from "recoil";
 
-enum Pages {
-    signin = "signin",
-    signup = "signup",
-    dashboard = "dashboard",
-    transactions = "transactions",
-    statistics = "statistics",
-    profile = "profile",
-    settings = "settings"
+export enum Pages {
+    signin = "Signin",
+    signup = "Signup",
+    dashboard = "Dashboard",
+    transactions = "Transactions",
+    statistics = "Statistics",
+    profile = "Profile",
+    settings = "Settings"
 }
 
-export const currentPage = atom<string | null>({
+export const currentPage = atom<Pages>({
     key: 'currentPage',
     default: Pages.dashboard
 })

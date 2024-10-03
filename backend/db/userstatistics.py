@@ -12,9 +12,10 @@ def add_statistics_db(userId):
         "userId": ObjectId(userId),
         "thisWeek": 125,
         "thisMonth": 125,
-        "credited": 0,
+        "thisYear": 125,
+        "credited": 125,
         "debited": 125,
-        "total": -125,
+        "total": 125,
     })
     
     return {

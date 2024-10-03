@@ -1,3 +1,5 @@
+import { Pages } from "./state";
+
 export type transaction = {
     _id: oid;
     userId: oid;
@@ -19,6 +21,7 @@ type dateFormat = {
 type oid = {
     $oid: string
 }
+
 export type statistics = {
     _id: oid;
     userId: oid;
@@ -28,3 +31,10 @@ export type statistics = {
     debited: number;
     total: number;
 };
+
+export type pagesType = {
+    id: number,
+    page: Pages,
+    linkto: string,
+    btn: string
+}
