@@ -12,12 +12,16 @@ import { Label } from "@/components/ui/label"
 import axios from "axios"
 import { useRef } from "react"
 import { useRouter } from 'next/navigation'
+import { useSetRecoilState } from "recoil"
+import { currentUserId } from "@/lib/state"
 
 export default function SigninDashboard() {
     const email_input_ref = useRef<HTMLInputElement | null>(null)
     const password_input_ref = useRef<HTMLInputElement | null>(null)
 
     const router = useRouter()
+
+    const setCurrentUserId = useSetRecoilState(currentUserId)
 
 
     return (
@@ -62,6 +66,8 @@ export default function SigninDashboard() {
                                     });
 
                                     if (result.data.success) {
+                                        setCurrentUserId(result.data.userId)
+                                        
                                         router.push('/api/user/dashboard')
                                     } else {
                                         alert("Please enter valid inputs")

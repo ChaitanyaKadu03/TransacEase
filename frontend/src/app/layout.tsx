@@ -1,11 +1,8 @@
+"use client"
+
 import type { Metadata } from "next";
 import { RecoilRoot } from "recoil"
 import "./globals.css";
-
-export const metadata: Metadata = {
-  title: "TransacEase",
-  description: "Managing transactions made super easy!",
-};
 
 export default function RootLayout({
   children,
@@ -15,7 +12,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <RecoilRoot>
           {children}
+        </RecoilRoot>
       </body>
     </html>
   );

@@ -21,7 +21,7 @@ def add_user_db(user):
         "date": datetime.datetime.now(),
         "amount": 825,
         "currency": "₹",
-        "proof": None,
+        "proof": "12-234-5678-765",
         "paymentType": "Cash"
     }
     

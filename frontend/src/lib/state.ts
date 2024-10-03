@@ -10,8 +10,14 @@ enum Pages {
     settings = "settings"
 }
 
-export const currentPage = atom({
+export const currentPage = atom<string | null>({
     key: 'currentPage',
     default: Pages.dashboard
 })
+
+export const currentUserId = atom<string | null>({
+    key: 'currentUserId',
+    default: null
+})
+
 

@@ -46,5 +46,6 @@ def get_statistics_db(userId):
     
     return {
         "msg": "Found the statistics!",
-        "data": json.loads(dumps(data))
+        "data": json.loads(dumps(data)),
+        "success": True
     }

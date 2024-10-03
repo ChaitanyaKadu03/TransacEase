@@ -1,42 +1,82 @@
+"use client"
+
 import * as React from "react"
 import {
-  File,
-  ListFilter,
+    File,
+    ListFilter,
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card"
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuCheckboxItem,
+    DropdownMenuContent,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from "@/components/ui/table"
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
 } from "@/components/ui/tabs"
 
+import axios from "axios"
+import { transaction } from "@/lib/types"
+import { useRecoilValue } from "recoil"
+import { currentUserId } from "@/lib/state"
+
 const Dashboard_transactions = () => {
+    const thecurrentUserId = useRecoilValue(currentUserId)
+    const [allTransactions, setAllTransactions] = React.useState<Array<transaction>>([
+        {
+            _id: { $oid: "66fd1a6ba32fb572adeef857" },
+            userId: { $oid: "66fd1a6ba32fb572adeef857" },
+            title: "string",
+            description: "string",
+            type: "DEBITED",
+            category: "string",
+            date: { $date: '2024-10-02T15:33:23.930Z' },
+            amount: "string",
+            currency: "string",
+            proof: "string",
+            paymentType: "string",
+        }
+    ])
+
+
+    React.useEffect(() => {
+        async function get_all_transactions() {
+            const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: "66fee2eaec9cc00993e49e86" } })
+            // const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: thecurrentUserId } })
+
+            if (result.data.success) {
+                setAllTransactions(result.data.transactionList)
+            } else {
+                alert("Error")
+            }
+
+        }
+
+        get_all_transactions()
+    }, [])
     return (
         <Tabs defaultValue="week" className="sm:ml-20 sm:mr-8 mt-6 max-sm:mx-4">
             <div className="flex items-center">
@@ -84,21 +124,24 @@ const Dashboard_transactions = () => {
             <TabsContent value="week">
                 <Card x-chunk="dashboard-05-chunk-3">
                     <CardHeader className="px-7">
-                        <CardTitle>Orders</CardTitle>
+                        <CardTitle>Transactions</CardTitle>
                         <CardDescription>
-                            Recent orders from your store.
+                            Recent transactions...
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Customer</TableHead>
+                                    <TableHead>Transaction</TableHead>
+                                    <TableHead className="hidden sm:table-cell">
+                                        Category
+                                    </TableHead>
                                     <TableHead className="hidden sm:table-cell">
                                         Type
                                     </TableHead>
                                     <TableHead className="hidden sm:table-cell">
-                                        Status
+                                        Proof Id
                                     </TableHead>
                                     <TableHead className="hidden md:table-cell">
                                         Date
@@ -107,46 +150,33 @@ const Dashboard_transactions = () => {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                <TableRow>
-                                    <TableCell>
-                                        <div className="font-medium">Olivia Smith</div>
-                                        <div className="hidden text-sm text-muted-foreground md:inline">
-                                            olivia@example.com
-                                        </div>
-                                    </TableCell>
-                                    <TableCell className="hidden sm:table-cell">
-                                        Refund
-                                    </TableCell>
-                                    <TableCell className="hidden sm:table-cell">
-                                        <Badge className="text-xs" variant="outline">
-                                            Declined
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className="hidden md:table-cell">
-                                        2023-06-24
-                                    </TableCell>
-                                    <TableCell className="text-right">$150.00</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>
-                                        <div className="font-medium">Emma Brown</div>
-                                        <div className="hidden text-sm text-muted-foreground md:inline">
-                                            emma@example.com
-                                        </div>
-                                    </TableCell>
-                                    <TableCell className="hidden sm:table-cell">
-                                        Sale
-                                    </TableCell>
-                                    <TableCell className="hidden sm:table-cell">
-                                        <Badge className="text-xs" variant="secondary">
-                                            Fulfilled
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className="hidden md:table-cell">
-                                        2023-06-26
-                                    </TableCell>
-                                    <TableCell className="text-right">$450.00</TableCell>
-                                </TableRow>
+                                {allTransactions.map((res) => {
+                                    return <TableRow key={res._id.$oid}>
+                                        <TableCell>
+                                            <div className="font-medium">{res.title}</div>
+                                            <div className="hidden text-sm text-muted-foreground md:inline">
+                                                {res._id.$oid}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="hidden sm:table-cell">
+                                            {res.category}
+                                        </TableCell>
+                                        <TableCell className="hidden sm:table-cell">
+                                            <Badge className="text-xs" variant="outline">
+                                                {res.paymentType}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="hidden sm:table-cell">
+                                            <Badge className="text-xs" variant="outline">
+                                                {res.proof}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="hidden md:table-cell">
+                                            {res.date.$date}
+                                        </TableCell>
+                                        <TableCell className="text-right">{res.amount} {res.currency}</TableCell>
+                                    </TableRow>
+                                })}
                             </TableBody>
                         </Table>
                     </CardContent>

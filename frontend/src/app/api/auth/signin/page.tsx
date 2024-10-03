@@ -1,3 +1,5 @@
+"use client"
+
 import SigninDashboard from '@/components/sections/signin'
 import React from 'react'
 

@@ -77,9 +77,9 @@ def all_transactions(request):
     
     if request.method == 'GET':
         
-        user_input = json.loads(request.body)
+        userId = request.GET.get('userId')
         
-        transactionsList = find_all_transaction_db(user_input['userId'])
+        transactionsList = find_all_transaction_db(userId)
         
         return JsonResponse({"transactionList": json.loads(dumps(transactionsList)), "success": True}, status=200)
 
@@ -149,8 +149,8 @@ def get_statistics(request):
     
     if request.method == 'GET':
         
-        user_input = json.loads(request.body)
+        userId = request.GET.get('userId')
         
-        result = get_statistics_db(user_input['userId'])
+        result = get_statistics_db(userId)
         
         return JsonResponse(result, status=200)

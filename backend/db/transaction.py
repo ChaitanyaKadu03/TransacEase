@@ -67,4 +67,4 @@ def find_all_transaction_db(userId):
         }
     )
     
-    return searchList
+    return list(searchList)
