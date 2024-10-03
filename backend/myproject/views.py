@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from db.user import add_user_db
 from db.transaction import find_all_transaction_db, find_transaction_db, delete_transaction_db, delete_transactions_list_db, update_transaction_db
 from db.userstatistics import update_statistics_db, get_statistics_db
@@ -9,8 +8,9 @@ from bson.objectid import ObjectId
 import json
 
 # from db. import create_user
+from django.views.decorators.csrf import csrf_exempt
 
-# @csrf_exempt 
+@csrf_exempt
 
 # Signup Route
 def register_user(request):
@@ -35,7 +35,7 @@ def register_user(request):
         })
         
         if userData:
-            return JsonResponse({"msg": "User already exists", "success": False}, status=404)
+            return JsonResponse({"msg": "User already exists", "success": False}, status=400)
         
         data = add_user_db(newUser)
         
@@ -47,26 +47,29 @@ def signin_user(request):
     
     if request.method == 'GET':
          
-        user_data = json.loads(request.body)
+        email = request.GET.get('email')
+        
+        password = request.GET.get('password')
         
         dbname = get_database()
     
         user_collection = dbname["User"]
         
         userData = user_collection.find_one({
-            "email": user_data["email"],
-            "password": user_data["password"]
+            "email": email,
+            "password": password
         })
                 
         if userData:
             data = {
                 "msg": "User found",
-                "userId": str(userData["_id"]) 
+                "userId": str(userData["_id"]),
+                "success": True 
             }
             return JsonResponse(data, status=200)
         
         else:  
-            return JsonResponse({"msg": "User not found", "exists": False}, status=404)
+            return JsonResponse({"msg": "User not found", "success": False}, status=404)
 
 
 # Transactions List Route

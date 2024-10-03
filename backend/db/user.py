@@ -31,7 +31,8 @@ def add_user_db(user):
     
     return {
         "msg": "User Added Successfully",
-        "userId": str(newUser.inserted_id)
+        "userId": str(newUser.inserted_id),
+        "success": True,
     }
 
 def update_user_db(userId,newuser):

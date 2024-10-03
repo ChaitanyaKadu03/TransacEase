@@ -10,12 +10,14 @@ import {
 import {
     Home,
     LineChart,
-    Package,
     Package2,
     Settings,
     ShoppingCart,
     Users2,
 } from "lucide-react"
+
+// bg-accent text-accent-foreground
+// text-muted-foreground
 
 const Navbar = () => {
     return (
@@ -31,8 +33,8 @@ const Navbar = () => {
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Link
-                            href="/api/dashboard"
-                            className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                            href="/api/user/dashboard"
+                            className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                         >
                             <Home className="h-5 w-5" />
                             <span className="sr-only">Dashboard</span>
@@ -43,8 +45,8 @@ const Navbar = () => {
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Link
-                            href="/api/transaction"
-                            className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                            href="/api/user/transactions"
+                            className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                         >
                             <ShoppingCart className="h-5 w-5" />
                             <span className="sr-only">Transaction</span>
@@ -55,7 +57,7 @@ const Navbar = () => {
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Link
-                            href="/api/statistics"
+                            href="/api/user/statistics"
                             className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                         >
                             <LineChart className="h-5 w-5" />
@@ -69,7 +71,7 @@ const Navbar = () => {
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Link
-                            href="/api/profile"
+                            href="/api/user/profile"
                             className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                         >
                             <Users2 className="h-5 w-5" />
@@ -81,7 +83,7 @@ const Navbar = () => {
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Link
-                            href="/api/settings"
+                            href="/api/user/settings"
                             className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                         >
                             <Settings className="h-5 w-5" />

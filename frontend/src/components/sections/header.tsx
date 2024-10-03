@@ -23,12 +23,12 @@ import { Input } from "@/components/ui/input"
 
 const Header = () => {
     return (
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:px-6 ml-14 py-4 sm:bg-transparent">
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:px-6 sm:ml-14 sm:py-4 sm:bg-transparent">
             <Breadcrumb className="hidden md:flex">
                 <BreadcrumbList>
                     <BreadcrumbItem>
                         <BreadcrumbLink asChild>
-                            <Link href="/api/dashboard" className="text-lg font-semibold">Dashboard</Link>
+                            <Link href="/api/user/dashboard" className="text-lg font-semibold">Dashboard</Link>
                         </BreadcrumbLink>
                     </BreadcrumbItem>
                 </BreadcrumbList>

@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 
@@ -7,10 +9,17 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-export const description =
-    "A login page with two columns. The first column has the login form with email and password. There's a Forgot your passwork link and a link to sign up if you do not have an account. The second column has a cover image."
+import axios from "axios"
+import { useRef } from "react"
+import { useRouter } from 'next/navigation'
 
 export default function SigninDashboard() {
+    const email_input_ref = useRef<HTMLInputElement | null>(null)
+    const password_input_ref = useRef<HTMLInputElement | null>(null)
+
+    const router = useRouter()
+
+
     return (
         <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
             <div className="flex items-center justify-center py-12">
@@ -29,16 +38,44 @@ export default function SigninDashboard() {
                                 type="email"
                                 placeholder="user@mail.com"
                                 required
+                                autoComplete="true"
+                                ref={email_input_ref}
                             />
                         </div>
                         <div className="grid gap-2">
                             <div className="flex items-center">
                                 <Label htmlFor="password">Password</Label>
                             </div>
-                            <Input id="password" type="password" required />
+                            <Input id="password" type="password" required autoComplete="true" ref={password_input_ref} />
                         </div>
-                        <Button type="submit" className="w-full">
-                            Login
+                        <Button
+                            className="w-full"
+                            onClick={async (e) => {
+                                e.preventDefault()
+
+                                try {
+                                    const result = await axios.get("http://127.0.0.1:8000/api/auth/signin", {
+                                        params: {
+                                            email: email_input_ref.current?.value,
+                                            password: password_input_ref.current?.value,
+                                        }
+                                    });
+
+                                    if (result.data.success) {
+                                        router.push('/api/user/dashboard')
+                                    } else {
+                                        alert("Please enter valid inputs")
+                                    }
+
+                                } catch (error) {
+                                    console.log("ERROR BRO");
+
+                                    alert("Please enter valid inputs")
+                                }
+
+
+                            }}>
+                            Log In
                         </Button>
                         {/* <Button variant="outline" className="w-full">
               Login with Google
