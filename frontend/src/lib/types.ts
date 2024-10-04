@@ -8,7 +8,7 @@ export type transaction = {
     type: "DEBITED" | "CREDITED";
     category: string;
     date: dateFormat;
-    amount: string;
+    amount: number;
     currency: string;
     proof: string | null;
     paymentType: string;

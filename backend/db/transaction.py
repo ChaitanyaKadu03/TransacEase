@@ -11,7 +11,8 @@ def add_transaction_db(transaction):
     transaction_collection.insert_one(transaction)
     
     return {
-        'msg': "New transaction added!"
+        'msg': "New transaction added!",
+        "success": True
     }
     
 def update_transaction_db(transactionId, newTransaction):

@@ -39,11 +39,11 @@ export default function SignupDashboard() {
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="first-name">First name</Label>
-                <Input id="first-name" placeholder="Chaitanya" autoComplete="true" required ref={email_input_ref} />
+                <Input id="first-name" placeholder="Chaitanya" autoComplete="true" required ref={firstname_input_ref} />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="last-name">Last name</Label>
-                <Input id="last-name" placeholder="Kadu" autoComplete="true" required ref={password_input_ref} />
+                <Input id="last-name" placeholder="Kadu" autoComplete="true" required ref={lastname_input_ref} />
               </div>
             </div>
             <div className="grid gap-2">
@@ -53,12 +53,12 @@ export default function SignupDashboard() {
                 type="email"
                 placeholder="user@mail.com"
                 autoComplete="true"
-                required ref={firstname_input_ref}
+                required ref={email_input_ref}
               />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" autoComplete="true" required ref={lastname_input_ref} />
+              <Input id="password" type="password" autoComplete="true" required ref={password_input_ref} />
             </div>
             <Button
               className="w-full"

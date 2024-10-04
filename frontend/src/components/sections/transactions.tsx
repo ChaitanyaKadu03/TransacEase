@@ -45,11 +45,15 @@ import { currentUserId } from "@/lib/state"
 import { useEffect, useState } from "react"
 import { transaction } from "@/lib/types"
 import axios from "axios"
+import { useRouter } from "next/navigation"
 
 export const description =
   "An products dashboard with a sidebar navigation. The sidebar has icon navigation. The content area has a breadcrumb and search in the header. It displays a list of products in a table with actions."
 
 export function Transactions() {
+
+  const router = useRouter()
+
   const thecurrentUserId = useRecoilValue(currentUserId)
   const [allTransactions, setAllTransactions] = useState<Array<transaction>>([
     {
@@ -60,7 +64,7 @@ export function Transactions() {
       type: "DEBITED",
       category: "string",
       date: { $date: '2024-10-02T15:33:23.930Z' },
-      amount: "string",
+      amount: 111,
       currency: "string",
       proof: "string",
       paymentType: "string",
@@ -69,7 +73,7 @@ export function Transactions() {
 
   useEffect(() => {
     async function get_all_transactions() {
-      const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: "66fee2eaec9cc00993e49e86" } })
+      const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: "66ff7580e9c99a02faec4df0" } })
       // const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: thecurrentUserId } })
 
       if (result.data.success) {
@@ -101,10 +105,12 @@ export function Transactions() {
                     Export
                   </span>
                 </Button>
-                <Button size="sm" className="h-7 gap-1">
+                <Button size="sm" className="h-7 gap-1" onClick={() => {
+                  router.push('/api/user/add-transaction')
+                }}>
                   <PlusCircle className="h-3.5 w-3.5" />
                   <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Add Product
+                    Add Transaction
                   </span>
                 </Button>
               </div>

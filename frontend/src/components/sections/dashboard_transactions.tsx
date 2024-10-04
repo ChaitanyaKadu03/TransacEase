@@ -54,7 +54,7 @@ const Dashboard_transactions = () => {
             type: "DEBITED",
             category: "string",
             date: { $date: '2024-10-02T15:33:23.930Z' },
-            amount: "string",
+            amount: 111,
             currency: "string",
             proof: "string",
             paymentType: "string",
@@ -64,7 +64,7 @@ const Dashboard_transactions = () => {
 
     React.useEffect(() => {
         async function get_all_transactions() {
-            const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: "66fee2eaec9cc00993e49e86" } })
+            const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: "66ff7580e9c99a02faec4df0" } })
             // const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: thecurrentUserId } })
 
             if (result.data.success) {

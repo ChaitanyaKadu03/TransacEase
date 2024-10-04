@@ -33,22 +33,193 @@ import {
     ChartTooltipContent,
 } from "@/components//ui/chart"
 import { Separator } from "@/components//ui/separator"
+import { useEffect, useState } from "react"
+import axios from "axios"
+import { useRecoilValue } from "recoil"
+import { currentUserId } from "@/lib/state"
+import { statistics, transaction } from "@/lib/types"
 
-export const description = "A collection of health charts."
+import { addDays, addWeeks, addMonths } from "date-fns";
 
 export function Statistics() {
+    const thecurrentUserId = useRecoilValue(currentUserId)
+    const [verChart, setVerChart] = useState([
+        {
+            activity: "Credited",
+            value: 94,
+            label: 125,
+            fill: "var(--color-stand)",
+        },
+        {
+            activity: "Debited",
+            value: 34,
+            label: 68,
+            fill: "var(--color-exercise)",
+        },
+        {
+            activity: "Total",
+            value: 56,
+            label: 32,
+            fill: "var(--color-move)",
+        },
+    ])
+    const [weekAvg, setweekAvg] = useState(0)
+    const [monthlyAvg, setmonthlyAvg] = useState(0)
+    const [statistics, setStatistics] = useState<statistics>(
+        {
+            _id: { $oid: "66fd1a6ba32fb572adeef857" },
+            userId: { $oid: "66fd1a6ba32fb572adeef857" },
+            thisWeek: 0,
+            thisMonth: 0,
+            credited: 0,
+            debited: 0,
+            total: 0,
+        }
+    )
+
+
+    const [allTransactions, setAllTransactions] = useState<Array<transaction>>([
+        {
+            _id: { $oid: "66fd1a6ba32fb572adeef857" },
+            userId: { $oid: "66fd1a6ba32fb572adeef857" },
+            title: "string",
+            description: "string",
+            type: "DEBITED",
+            category: "string",
+            date: { $date: '2024-10-02T15:33:23.930Z' },
+            amount: 111,
+            currency: "string",
+            proof: "string",
+            paymentType: "string",
+        }
+    ])
+    const [last7DaysCost, setLast7DaysCost] = useState(0);
+    const [last7WeeksCost, setLast7WeeksCost] = useState(0);
+    const [last7MonthsCost, setLast7MonthsCost] = useState(0);
+
+    useEffect(() => {
+        async function getStatistics() {
+            const result = await axios.get("http://127.0.0.1:8000/api/statistics", { params: { userId: "66ff7580e9c99a02faec4df0" } })
+
+            if (result.data.success) {
+                setStatistics(result.data.data)
+            } else {
+                alert("Error")
+            }
+
+
+        }
+
+        async function get_all_transactions() {
+            const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: "66ff7580e9c99a02faec4df0" } })
+            // const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: thecurrentUserId } })
+
+            if (result.data.success) {
+                setAllTransactions(result.data.transactionList)
+            } else {
+                alert("Error")
+            }
+
+
+        }
+
+        getStatistics()
+
+        get_all_transactions()
+    }, [])
+
+    useEffect(() => {
+        function verticalGrapg() {
+            let maxVal = statistics.credited
+            if (statistics.total >= statistics.credited && statistics.total >= statistics.debited) {
+                maxVal = statistics.total + 1000
+            } else if (statistics.credited >= statistics.total && statistics.credited >= statistics.debited) {
+                maxVal = statistics.credited + 1000
+            } else {
+                maxVal = statistics.debited + 1000
+            }
+
+            setVerChart([
+                {
+                    activity: "Credited",
+                    value: (statistics.credited / maxVal) * 100,
+                    label: statistics.credited,
+                    fill: "var(--color-stand)",
+                },
+                {
+                    activity: "Debited",
+                    value: (statistics.debited / maxVal) * 100,
+                    label: statistics.debited,
+                    fill: "var(--color-exercise)",
+                },
+                {
+                    activity: "Total",
+                    value: (statistics.total / maxVal) * 100,
+                    label: statistics.total,
+                    fill: "var(--color-move)",
+                },
+            ])
+        }
+
+        setweekAvg(Math.floor(statistics.thisWeek / 7))
+        setmonthlyAvg(Math.floor(statistics.thisMonth / 30))
+        verticalGrapg()
+
+        function calculateTransactionCosts(transactions: Array<transaction>) {
+            const now = new Date();
+
+            // Date ranges
+            const last7Days = addDays(now, -7);
+            const last7Weeks = addWeeks(now, -7);
+            const last7Months = addMonths(now, -7);
+
+            // Initialize totals as 0 (even if no transactions exist, result should stay 0)
+            let daysTotal = 0;
+            let weeksTotal = 0;
+            let monthsTotal = 0;
+
+            // Iterate through transactions
+            transactions.forEach((transaction) => {
+                const transactionDate = new Date(transaction.date.$date); // Parse BSON date
+
+                // Add transaction to the last 7 days total if it falls within that range
+                if (transactionDate >= last7Days) {
+                    daysTotal += transaction.amount || 0; // If no amount, add 0
+                }
+
+                // Add transaction to the last 7 weeks total if it falls within that range
+                if (transactionDate >= last7Weeks) {
+                    weeksTotal += transaction.amount || 0; // If no amount, add 0
+                }
+
+                // Add transaction to the last 7 months total if it falls within that range
+                if (transactionDate >= last7Months) {
+                    monthsTotal += transaction.amount || 0; // If no amount, add 0
+                }
+            });
+
+            // Update state
+            setLast7DaysCost(daysTotal);
+            setLast7WeeksCost(weeksTotal);
+            setLast7MonthsCost(monthsTotal);
+        }
+
+        calculateTransactionCosts(allTransactions);
+
+    }, [statistics])
+
     return (
         <div className="chart-wrapper mx-auto flex max-w-6xl flex-col flex-wrap items-start justify-center gap-6 p-6 sm:flex-row sm:p-8">
             <div className="grid w-full gap-6 sm:grid-cols-2 lg:max-w-[22rem] lg:grid-cols-1 xl:max-w-[25rem]">
                 <Card
-                    className="lg:max-w-md" x-chunk="charts-01-chunk-0"
+                    className="lg:max-w-md opacity-40" x-chunk="charts-01-chunk-0"
                 >
                     <CardHeader className="space-y-0 pb-2">
                         <CardDescription>Today</CardDescription>
                         <CardTitle className="text-4xl tabular-nums">
-                            12,584{" "}
+                            1,284{" "}
                             <span className="font-sans text-sm font-normal tracking-normal text-muted-foreground">
-                                steps
+                                rs
                             </span>
                         </CardTitle>
                     </CardHeader>
@@ -56,7 +227,7 @@ export function Statistics() {
                         <ChartContainer
                             config={{
                                 steps: {
-                                    label: "Steps",
+                                    label: "Cost",
                                     color: "hsl(var(--chart-1))",
                                 },
                             }}
@@ -140,7 +311,7 @@ export function Statistics() {
                                 >
                                     <Label
                                         position="insideBottomLeft"
-                                        value="Average Steps"
+                                        value="Average Expense"
                                         offset={10}
                                         fill="hsl(var(--foreground))"
                                     />
@@ -161,31 +332,27 @@ export function Statistics() {
                             Over the past 7 days, you have made transactions totaling:{" "}
                             <span className="font-medium text-foreground">53,305</span> ₹.
                         </CardDescription>
-                        <CardDescription>
-                            You need {" "}
-                            <span className="font-medium text-foreground">12,584</span> more units to reach your transaction goal.
-                        </CardDescription>
                     </CardFooter>
                 </Card>
                 <Card
-                    className="flex flex-col lg:max-w-md" x-chunk="charts-01-chunk-1"
+                    className="flex flex-col lg:max-w-md opacity-40" x-chunk="charts-01-chunk-1"
                 >
                     <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
                         <div>
-                            <CardDescription>Resting HR</CardDescription>
+                            <CardDescription>Daily Expense</CardDescription>
                             <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
-                                62
+                                240
                                 <span className="text-sm font-normal tracking-normal text-muted-foreground">
-                                    bpm
+                                    rs
                                 </span>
                             </CardTitle>
                         </div>
                         <div>
-                            <CardDescription>Variability</CardDescription>
+                            <CardDescription>Weekly Expense</CardDescription>
                             <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
-                                35
+                                430
                                 <span className="text-sm font-normal tracking-normal text-muted-foreground">
-                                    ms
+                                    rs
                                 </span>
                             </CardTitle>
                         </div>
@@ -194,7 +361,7 @@ export function Statistics() {
                         <ChartContainer
                             config={{
                                 resting: {
-                                    label: "Resting",
+                                    label: "Expense",
                                     color: "hsl(var(--chart-1))",
                                 },
                             }}
@@ -294,17 +461,17 @@ export function Statistics() {
                     className="max-w-xs" x-chunk="charts-01-chunk-2"
                 >
                     <CardHeader>
-                        <CardTitle>Progress</CardTitle>
+                        <CardTitle>Average Cost</CardTitle>
                         <CardDescription>
-                            You're average more steps a day this year than last year.
+                            This is to represent the average transaction cost for daily...
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="grid gap-4">
                         <div className="grid auto-rows-min gap-2">
                             <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                                12,453
+                                {monthlyAvg}
                                 <span className="text-sm font-normal text-muted-foreground">
-                                    steps/day
+                                    Monthly
                                 </span>
                             </div>
                             <ChartContainer
@@ -327,8 +494,8 @@ export function Statistics() {
                                     }}
                                     data={[
                                         {
-                                            date: "2024",
-                                            steps: 12435,
+                                            date: "Monthly",
+                                            steps: 10000,
                                         },
                                     ]}
                                 >
@@ -353,9 +520,9 @@ export function Statistics() {
                         </div>
                         <div className="grid auto-rows-min gap-2">
                             <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                                10,103
+                                {weekAvg}
                                 <span className="text-sm font-normal text-muted-foreground">
-                                    steps/day
+                                    Weekly
                                 </span>
                             </div>
                             <ChartContainer
@@ -378,8 +545,8 @@ export function Statistics() {
                                     }}
                                     data={[
                                         {
-                                            date: "2023",
-                                            steps: 10103,
+                                            date: "Weekly",
+                                            steps: 10000,
                                         },
                                     ]}
                                 >
@@ -408,17 +575,16 @@ export function Statistics() {
                     className="max-w-xs" x-chunk="charts-01-chunk-3"
                 >
                     <CardHeader className="p-4 pb-0">
-                        <CardTitle>Walking Distance</CardTitle>
+                        <CardTitle>Week's Average</CardTitle>
                         <CardDescription>
-                            Over the last 7 days, your distance walked and run was 12.5 miles
-                            per day.
+                            Over the last 7 days, your average transaction cost per day was...
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
                         <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
-                            12.5
+                            {weekAvg}
                             <span className="text-sm font-normal text-muted-foreground">
-                                miles/day
+                                ₹
                             </span>
                         </div>
                         <ChartContainer
@@ -495,15 +661,15 @@ export function Statistics() {
                         <ChartContainer
                             config={{
                                 move: {
-                                    label: "Move",
+                                    label: "Credited",
                                     color: "hsl(var(--chart-1))",
                                 },
                                 stand: {
-                                    label: "Stand",
+                                    label: "Debited",
                                     color: "hsl(var(--chart-2))",
                                 },
                                 exercise: {
-                                    label: "Exercise",
+                                    label: "Total",
                                     color: "hsl(var(--chart-3))",
                                 },
                             }}
@@ -516,26 +682,7 @@ export function Statistics() {
                                     top: 0,
                                     bottom: 10,
                                 }}
-                                data={[
-                                    {
-                                        activity: "stand",
-                                        value: (8 / 12) * 100,
-                                        label: "8/12 hr",
-                                        fill: "var(--color-stand)",
-                                    },
-                                    {
-                                        activity: "exercise",
-                                        value: (46 / 60) * 100,
-                                        label: "46/60 min",
-                                        fill: "var(--color-exercise)",
-                                    },
-                                    {
-                                        activity: "move",
-                                        value: (245 / 360) * 100,
-                                        label: "245/360 kcal",
-                                        fill: "var(--color-move)",
-                                    },
-                                ]}
+                                data={verChart}
                                 layout="vertical"
                                 barSize={32}
                                 barGap={2}
@@ -564,31 +711,31 @@ export function Statistics() {
                     <CardFooter className="flex flex-row border-t p-4">
                         <div className="flex w-full items-center gap-2">
                             <div className="grid flex-1 auto-rows-min gap-0.5">
-                                <div className="text-xs text-muted-foreground">Move</div>
+                                <div className="text-xs text-muted-foreground">Credited</div>
                                 <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                                    562
+                                    {statistics.credited}
                                     <span className="text-sm font-normal text-muted-foreground">
-                                        kcal
+                                        ₹
                                     </span>
                                 </div>
                             </div>
                             <Separator orientation="vertical" className="mx-2 h-10 w-px" />
                             <div className="grid flex-1 auto-rows-min gap-0.5">
-                                <div className="text-xs text-muted-foreground">Exercise</div>
+                                <div className="text-xs text-muted-foreground">Debited</div>
                                 <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                                    73
+                                    {statistics.debited}
                                     <span className="text-sm font-normal text-muted-foreground">
-                                        min
+                                        ₹
                                     </span>
                                 </div>
                             </div>
                             <Separator orientation="vertical" className="mx-2 h-10 w-px" />
                             <div className="grid flex-1 auto-rows-min gap-0.5">
-                                <div className="text-xs text-muted-foreground">Stand</div>
+                                <div className="text-xs text-muted-foreground">Total</div>
                                 <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                                    14
+                                    {statistics.total}
                                     <span className="text-sm font-normal text-muted-foreground">
-                                        hr
+                                        ₹
                                     </span>
                                 </div>
                             </div>
@@ -603,29 +750,29 @@ export function Statistics() {
                     <CardContent className="flex gap-4 p-4">
                         <div className="grid items-center gap-2">
                             <div className="grid flex-1 auto-rows-min gap-0.5">
-                                <div className="text-sm text-muted-foreground">Move</div>
+                                <div className="text-sm text-muted-foreground">Credited</div>
                                 <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
-                                    562/600
+                                    {statistics.credited}
                                     <span className="text-sm font-normal text-muted-foreground">
-                                        kcal
+                                        ₹
                                     </span>
                                 </div>
                             </div>
                             <div className="grid flex-1 auto-rows-min gap-0.5">
-                                <div className="text-sm text-muted-foreground">Exercise</div>
+                                <div className="text-sm text-muted-foreground">Debited</div>
                                 <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
-                                    73/120
+                                    {statistics.debited}
                                     <span className="text-sm font-normal text-muted-foreground">
-                                        min
+                                        ₹
                                     </span>
                                 </div>
                             </div>
                             <div className="grid flex-1 auto-rows-min gap-0.5">
-                                <div className="text-sm text-muted-foreground">Stand</div>
+                                <div className="text-sm text-muted-foreground">Total</div>
                                 <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
-                                    8/12
+                                    {statistics.total}
                                     <span className="text-sm font-normal text-muted-foreground">
-                                        hr
+                                        ₹
                                     </span>
                                 </div>
                             </div>
@@ -654,23 +801,7 @@ export function Statistics() {
                                     top: -10,
                                     bottom: -10,
                                 }}
-                                data={[
-                                    {
-                                        activity: "stand",
-                                        value: (8 / 12) * 100,
-                                        fill: "var(--color-stand)",
-                                    },
-                                    {
-                                        activity: "exercise",
-                                        value: (46 / 60) * 100,
-                                        fill: "var(--color-exercise)",
-                                    },
-                                    {
-                                        activity: "move",
-                                        value: (245 / 360) * 100,
-                                        fill: "var(--color-move)",
-                                    },
-                                ]}
+                                data={verChart}
                                 innerRadius="20%"
                                 barSize={24}
                                 startAngle={90}
@@ -691,16 +822,16 @@ export function Statistics() {
                     className="max-w-xs" x-chunk="charts-01-chunk-6"
                 >
                     <CardHeader className="p-4 pb-0">
-                        <CardTitle>Active Energy</CardTitle>
+                        <CardTitle>Monthly Average</CardTitle>
                         <CardDescription>
-                            You're burning an average of 754 calories per day. Good job!
+                            You're spending per day an average of ....
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-2">
                         <div className="flex items-baseline gap-2 text-3xl font-bold tabular-nums leading-none">
-                            1,254
+                            {monthlyAvg}
                             <span className="text-sm font-normal text-muted-foreground">
-                                kcal/day
+                                ₹
                             </span>
                         </div>
                         <ChartContainer
@@ -771,18 +902,14 @@ export function Statistics() {
                     </CardContent>
                 </Card>
                 <Card
-                    className="max-w-xs" x-chunk="charts-01-chunk-7"
+                    className="max-w-xs opacity-40" x-chunk="charts-01-chunk-7"
                 >
                     <CardHeader className="space-y-0 pb-0">
-                        <CardDescription>Time in Bed</CardDescription>
+                        <CardDescription>Expenses</CardDescription>
                         <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
-                            8
+                            3240
                             <span className="font-sans text-sm font-normal tracking-normal text-muted-foreground">
-                                hr
-                            </span>
-                            35
-                            <span className="font-sans text-sm font-normal tracking-normal text-muted-foreground">
-                                min
+                                rs
                             </span>
                         </CardTitle>
                     </CardHeader>
@@ -862,11 +989,11 @@ export function Statistics() {
                                     content={<ChartTooltipContent hideLabel />}
                                     formatter={(value) => (
                                         <div className="flex min-w-[120px] items-center text-xs text-muted-foreground">
-                                            Time in bed
+                                            Expenses
                                             <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
                                                 {value}
                                                 <span className="font-normal text-muted-foreground">
-                                                    hr
+                                                    rs.
                                                 </span>
                                             </div>
                                         </div>

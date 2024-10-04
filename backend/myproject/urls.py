@@ -24,6 +24,8 @@ urlpatterns = [
     
     path('api/transactions', views.all_transactions, name='all_transactions'),
     
+    path('api/add-transaction', views.add_transaction, name='add_transactions'),
+    
     path('api/transactions/search', views.find_a_transactions, name='search_transactions'),
     
     path('api/transaction/delete', views.delete_transaction, name='delete_transactions'),

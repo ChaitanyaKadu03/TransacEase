@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from db.user import add_user_db
+from db.transaction import add_transaction_db
 from db.transaction import find_all_transaction_db, find_transaction_db, delete_transaction_db, delete_transactions_list_db, update_transaction_db
 from db.userstatistics import update_statistics_db, get_statistics_db
 from db.pymongo_get_database import get_database
@@ -70,6 +71,38 @@ def signin_user(request):
         
         else:  
             return JsonResponse({"msg": "User not found", "success": False}, status=404)
+        
+        
+# Add transaction Route
+def add_transaction(request):
+    
+    if request.method == 'POST':
+         
+        transaction = json.loads(request.body)
+        print(transaction)
+        
+        newTransaction = {
+        "userId": ObjectId(transaction["userId"]),
+        "title": transaction["title"],
+        "description": transaction["description"],
+        "type": transaction["type"],
+        "category": transaction["category"],
+        "date": transaction["date"],
+        "amount": transaction["amount"],
+        "currency": transaction["currency"],
+        "proof": transaction["proof"],
+        "paymentType": transaction["paymentType"]
+        }
+        
+        result = add_transaction_db(newTransaction)
+        
+        print(result["success"])
+        
+        if result["success"]:
+            print("---------------------")
+            return JsonResponse(result, status=201)
+            
+        return JsonResponse({"msg": "Failed!", "success": False}, status=400)
 
 
 # Transactions List Route

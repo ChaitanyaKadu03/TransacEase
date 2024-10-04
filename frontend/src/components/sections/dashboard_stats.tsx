@@ -16,8 +16,12 @@ import { currentUserId } from "@/lib/state"
 import { statistics } from "@/lib/types"
 import { useEffect, useState } from "react"
 import axios from "axios"
+import { useRouter } from "next/navigation"
 
 const Dashboard_stats = () => {
+
+    const router = useRouter()
+
     const thecurrentUserId = useRecoilValue(currentUserId)
     const [statistics, setStatistics] = useState<statistics>(
         {
@@ -33,7 +37,7 @@ const Dashboard_stats = () => {
 
     useEffect(() => {
         async function getStatistics() {
-            const result = await axios.get("http://127.0.0.1:8000/api/statistics", { params: { userId: "66fee2eaec9cc00993e49e86" } })
+            const result = await axios.get("http://127.0.0.1:8000/api/statistics", { params: { userId: "66ff7580e9c99a02faec4df0" } })
 
             if (result.data.success) {
                 setStatistics(result.data.data)
@@ -57,7 +61,9 @@ const Dashboard_stats = () => {
                     </CardDescription>
                 </CardHeader>
                 <CardFooter>
-                    <Button>Create New Transaction</Button>
+                    <Button onClick={() => {
+                        router.push('/api/user/add-transaction')
+                    }}>Create New Transaction</Button>
                 </CardFooter>
             </Card>
             <Card x-chunk="dashboard-05-chunk-1" className="max-sm:w-full">
