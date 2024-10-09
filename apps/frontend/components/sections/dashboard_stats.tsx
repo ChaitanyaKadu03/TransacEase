@@ -62,7 +62,7 @@ const Dashboard_stats = () => {
                 </CardHeader>
                 <CardFooter>
                     <Button onClick={() => {
-                        router.push('/api/user/add-transaction')
+                        router.push('/api/user/transactions/add')
                     }}>Create New Transaction</Button>
                 </CardFooter>
             </Card>
