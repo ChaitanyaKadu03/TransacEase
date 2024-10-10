@@ -67,8 +67,8 @@ export function Statistics() {
     const [monthlyAvg, setmonthlyAvg] = useState(0)
     const [statistics, setStatistics] = useState<statistics>(
         {
-            _id: { $oid: "66fd1a6ba32fb572adeef857" },
-            userId: { $oid: "66fd1a6ba32fb572adeef857" },
+            _id: { $oid: "6706debdc02ce99aaca2a1cf" },
+            userId: { $oid: "6706debdc02ce99aaca2a1cf" },
             thisWeek: 0,
             thisMonth: 0,
             credited: 0,
@@ -80,8 +80,8 @@ export function Statistics() {
 
     const [allTransactions, setAllTransactions] = useState<Array<transaction>>([
         {
-            _id: { $oid: "66fd1a6ba32fb572adeef857" },
-            userId: { $oid: "66fd1a6ba32fb572adeef857" },
+            _id: { $oid: "6706debdc02ce99aaca2a1cf" },
+            userId: { $oid: "6706debdc02ce99aaca2a1cf" },
             title: "string",
             description: "string",
             type: "DEBITED",
@@ -99,7 +99,7 @@ export function Statistics() {
 
     useEffect(() => {
         async function getStatistics() {
-            const result = await axios.get("http://127.0.0.1:8000/api/statistics", { params: { userId: "66ff7580e9c99a02faec4df0" } })
+            const result = await axios.get("http://127.0.0.1:8000/api/statistics", { params: { userId: "6706debdc02ce99aaca2a1cf" } })
 
             if (result.data.success) {
                 setStatistics(result.data.data)
@@ -111,7 +111,7 @@ export function Statistics() {
         }
 
         async function get_all_transactions() {
-            const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: "66ff7580e9c99a02faec4df0" } })
+            const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: "6706debdc02ce99aaca2a1cf" } })
             // const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: thecurrentUserId } })
 
             if (result.data.success) {

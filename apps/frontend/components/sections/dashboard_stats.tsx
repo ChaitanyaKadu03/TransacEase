@@ -17,16 +17,44 @@ import { statistics } from "@/lib/types"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { useRouter } from "next/navigation"
+import signup_logic from "../experiment"
 
 const Dashboard_stats = () => {
+
+    useEffect(() => {
+        const signupLogic = async () => {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/auth/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: "chaitanyakadu.66@gmail.com",
+                        password: "123123",
+                        firstname: "chaitanya",
+                        lastname: "kadu",
+                    }),
+                });
+
+                const data = await response.json();
+                console.log(data); // Handle the response here
+            } catch (error) {
+                console.error('Signup failed:', error);
+            }
+        };
+
+        signupLogic();
+    }, []);
+    
 
     const router = useRouter()
 
     const thecurrentUserId = useRecoilValue(currentUserId)
     const [statistics, setStatistics] = useState<statistics>(
         {
-            _id: { $oid: "66fd1a6ba32fb572adeef857" },
-            userId: { $oid: "66fd1a6ba32fb572adeef857" },
+            _id: { $oid: "6706debdc02ce99aaca2a1cf" },
+            userId: { $oid: "6706debdc02ce99aaca2a1cf" },
             thisWeek: 0,
             thisMonth: 0,
             credited: 0,
@@ -37,7 +65,7 @@ const Dashboard_stats = () => {
 
     useEffect(() => {
         async function getStatistics() {
-            const result = await axios.get("http://127.0.0.1:8000/api/statistics", { params: { userId: "66ff7580e9c99a02faec4df0" } })
+            const result = await axios.get("http://127.0.0.1:8000/api/statistics", { params: { userId: "6706debdc02ce99aaca2a1cf" } })
 
             if (result.data.success) {
                 setStatistics(result.data.data)

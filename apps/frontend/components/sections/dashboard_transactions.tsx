@@ -38,8 +38,8 @@ const Dashboard_transactions = () => {
     const thecurrentUserId = useRecoilValue(currentUserId)
     const [allTransactions, setAllTransactions] = React.useState<Array<transaction>>([
         {
-            _id: { $oid: "66fd1a6ba32fb572adeef857" },
-            userId: { $oid: "66fd1a6ba32fb572adeef857" },
+            _id: { $oid: "6706debdc02ce99aaca2a1cf" },
+            userId: { $oid: "6706debdc02ce99aaca2a1cf" },
             title: "string",
             description: "string",
             type: "DEBITED",
@@ -55,7 +55,7 @@ const Dashboard_transactions = () => {
 
     React.useEffect(() => {
         async function get_all_transactions() {
-            const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: "66ff7580e9c99a02faec4df0" } })
+            const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: "6706debdc02ce99aaca2a1cf" } })
             // const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: thecurrentUserId } })
 
             if (result.data.success) {

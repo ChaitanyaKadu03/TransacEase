@@ -145,7 +145,7 @@ export function AddTransaction() {
 
                     try {
                         const result = await axios.post("http://127.0.0.1:8000/api/add-transaction", {
-                            userId: '66ff7580e9c99a02faec4df0',
+                            userId: '6706debdc02ce99aaca2a1cf',
                             title,
                             description,
                             type,

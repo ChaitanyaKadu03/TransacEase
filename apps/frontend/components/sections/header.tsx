@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input"
 import { useRecoilValue } from "recoil"
 import { currentPage, Pages } from "@/lib/state"
 import axios from "axios"
+import { SignOut } from "../../lib/action"
 
 const Header = () => {
     const thecurrentPage = useRecoilValue<Pages>(currentPage)
@@ -91,7 +92,7 @@ const Header = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={async () => {
-                        // Write code for logout/signout
+                        SignOut()
                     }}>Logout</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

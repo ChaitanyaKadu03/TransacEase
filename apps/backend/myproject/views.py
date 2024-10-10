@@ -132,7 +132,7 @@ def find_a_transactions(request):
 # Delete one transactionr route
 def delete_transaction(request):
     
-    if request.method == 'DELETE':
+    if request.method == 'POST':
         
         user_input = json.loads(request.body)
         

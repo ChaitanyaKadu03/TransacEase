@@ -58,8 +58,8 @@ export function Transactions() {
   const thecurrentUserId = useRecoilValue(currentUserId)
   const [allTransactions, setAllTransactions] = useState<Array<transaction>>([
     {
-      _id: { $oid: "66fd1a6ba32fb572adeef857" },
-      userId: { $oid: "66fd1a6ba32fb572adeef857" },
+      _id: { $oid: "6706debdc02ce99aaca2a1cf" },
+      userId: { $oid: "6706debdc02ce99aaca2a1cf" },
       title: "string",
       description: "string",
       type: "DEBITED",
@@ -74,7 +74,7 @@ export function Transactions() {
 
   useEffect(() => {
     async function get_all_transactions() {
-      const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: "66ff7580e9c99a02faec4df0" } })
+      const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: "6706debdc02ce99aaca2a1cf" } })
       // const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: thecurrentUserId } })
 
       if (result.data.success) {
@@ -96,8 +96,6 @@ export function Transactions() {
             <div className="flex items-center">
               <TabsList>
                 <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="active">Credited</TabsTrigger>
-                <TabsTrigger value="draft">Debited</TabsTrigger>
               </TabsList>
               <div className="ml-auto flex items-center gap-2">
                 <Button size="sm" variant="outline" className="h-7 gap-1">
@@ -151,7 +149,7 @@ export function Transactions() {
                     </TableHeader>
                     <TableBody>
                       {allTransactions.map(res => {
-                        return <TableRow>
+                        return <TableRow key={res._id.$oid}>
                           <TableCell className="font-medium">
                             {res.title}
                           </TableCell>
@@ -187,11 +185,18 @@ export function Transactions() {
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={async()=>{
+                                <DropdownMenuItem onClick={async () => {
                                   setTransactionId(res._id.$oid)
                                   router.push('/api/user/transactions/update')
                                 }}>Edit</DropdownMenuItem>
-                                <DropdownMenuItem>Delete</DropdownMenuItem>
+                                <DropdownMenuItem onClick={async () => {
+                                  const result = await axios.post("http://127.0.0.1:8000/api/transaction/delete",  { "transactionId": res._id.$oid })
+
+                                  if (result.statusText == 'OK') {
+                                    window.location.reload()
+                                  }
+
+                                }}>Delete</DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
                           </TableCell>

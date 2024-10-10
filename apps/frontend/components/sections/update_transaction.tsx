@@ -150,7 +150,7 @@ export function UpdateTransaction() {
                         const result = await axios.put("http://127.0.0.1:8000/api/transaction/update", {
                             transactionId: theTransactionId,
                             newTransaction: {
-                                userId: '66ff7580e9c99a02faec4df0',
+                                userId: '6706debdc02ce99aaca2a1cf',
                                 title,
                                 description,
                                 type,
