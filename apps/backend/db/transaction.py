@@ -54,7 +54,7 @@ def delete_transactions_list_db(userId):
 def find_transaction_db(userId, word):
     searchList = transaction_collection.find(
         {
-            "_id": ObjectId(userId), 
+            "userId": ObjectId(userId), 
             "title": {"$regex": f"{word}", "$options": "i"}
         }
     ).limit( 5 )

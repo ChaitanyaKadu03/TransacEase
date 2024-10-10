@@ -1,10 +1,8 @@
 "use client"
 
-import * as React from "react"
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons"
 import { useTheme } from "next-themes"
 import Image from "next/image"
-import Link from "next/link"
 import user from '../../assets/user.png'
 import {
     Search,
@@ -28,11 +26,83 @@ import { useRecoilValue } from "recoil"
 import { currentPage, Pages } from "@/lib/state"
 import axios from "axios"
 import { SignOut } from "../../lib/action"
+import { useEffect, useState } from "react"
+
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
+
+import { cn } from "@/lib/utils"
+
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+} from "@/components/ui/command"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { transaction } from "../../lib/types"
+import { DialogDescription } from "@radix-ui/react-dialog"
+import { Transaction_Details } from "./transaction_details"
+import { useRouter } from "next/navigation"
 
 const Header = () => {
     const thecurrentPage = useRecoilValue<Pages>(currentPage)
 
+    const [open, setOpen] = useState(true)
+    const [transactionId, setTransactionId] = useState("")
+    const [value, setValue] = useState("")
+    const [searchTitle, setSearchTitle] = useState<Array<transaction>>([
+        {
+            _id: { $oid: "6706debdc02ce99aaca2a1cf" },
+            userId: { $oid: "6706debdc02ce99aaca2a1cf" },
+            title: "string",
+            description: "string",
+            type: "DEBITED",
+            category: "string",
+            date: { $date: '2024-10-02T15:33:23.930Z' },
+            amount: 111,
+            currency: "string",
+            proof: "string",
+            paymentType: "string",
+        }
+    ])
+
+    useEffect(() => {
+        if (value) {
+            async function search_transactions() {
+                const result = await axios.get("http://127.0.0.1:8000/api/transactions/search", {
+                    params: {
+                        userId: "6706debdc02ce99aaca2a1cf",
+                        word: value
+                    }
+                })
+
+                setSearchTitle(result.data.transactionList);
+
+            }
+
+            search_transactions()
+        }
+
+    }, [value])
+
     const { setTheme } = useTheme()
+
+    const router = useRouter()
 
     return (
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:px-6 sm:ml-14 sm:py-4 sm:bg-transparent">
@@ -46,13 +116,69 @@ const Header = () => {
                 </BreadcrumbList>
             </Breadcrumb>
             <div className="relative ml-auto flex-1 md:grow-0">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                    type="search"
-                    placeholder="Search..."
-                    className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
-                    disabled
-                />
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button variant="secondary">Search</Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px] w-full">
+                        <DialogHeader>
+                            <DialogTitle>Search</DialogTitle>
+                        </DialogHeader>
+                        <Popover open={open} onOpenChange={setOpen}>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    aria-expanded={open}
+                                    className="w-full justify-between"
+                                >
+                                    {value
+                                        ? searchTitle.find((data) => data.title === value)?.title
+                                        : "Select using title..."}
+                                    <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-full p-0 relative">
+                                <Command>
+                                    <CommandInput placeholder="Search using title..." className="h-9" onValueChange={(e) => {
+                                        setValue(e)
+                                    }} />
+                                    <CommandList>
+                                        <CommandEmpty>No title found.</CommandEmpty>
+                                        <CommandGroup>
+                                            {searchTitle.map((searchTitle) => (
+                                                <CommandItem
+                                                    key={searchTitle._id.$oid}
+                                                    value={searchTitle.title}
+                                                    onSelect={(currentValue) => {
+                                                        setValue(currentValue === value ? "" : currentValue)
+                                                        setOpen(false)
+                                                        setTransactionId(searchTitle._id.$oid)
+                                                    }}
+                                                >
+                                                    {searchTitle.title}
+                                                    <CheckIcon
+                                                        className={cn(
+                                                            "ml-auto h-4 w-4",
+                                                            value === searchTitle.title ? "opacity-100" : "opacity-0"
+                                                        )}
+                                                    />
+                                                </CommandItem>
+                                            ))}
+                                        </CommandGroup>
+                                    </CommandList>
+                                </Command>
+                            </PopoverContent>
+                        </Popover>
+                        <DialogFooter>
+                            <Button type="submit" onClick={() => {
+                                router.push('/api/user/transactions/details')
+                                window.location.reload()
+                            }
+                            }>View Transaction</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </div>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>

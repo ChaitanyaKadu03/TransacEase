@@ -20,34 +20,6 @@ import { useRouter } from "next/navigation"
 import signup_logic from "../experiment"
 
 const Dashboard_stats = () => {
-
-    useEffect(() => {
-        const signupLogic = async () => {
-            try {
-                const response = await fetch('http://127.0.0.1:8000/api/auth/signup', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: "chaitanyakadu.66@gmail.com",
-                        password: "123123",
-                        firstname: "chaitanya",
-                        lastname: "kadu",
-                    }),
-                });
-
-                const data = await response.json();
-                console.log(data); // Handle the response here
-            } catch (error) {
-                console.error('Signup failed:', error);
-            }
-        };
-
-        signupLogic();
-    }, []);
-    
-
     const router = useRouter()
 
     const thecurrentUserId = useRecoilValue(currentUserId)

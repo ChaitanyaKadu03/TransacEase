@@ -122,9 +122,11 @@ def find_a_transactions(request):
     
     if request.method == 'GET':
         
-        user_input = json.loads(request.body)
+        userId = request.GET.get('userId')
         
-        transactionsList = find_transaction_db(user_input['userId'], user_input['word'])
+        input_word = request.GET.get('word')
+                
+        transactionsList = find_transaction_db(userId, input_word)
         
         return JsonResponse({"transactionList": json.loads(dumps(transactionsList)), "success": True}, status=201)
 
