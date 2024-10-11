@@ -1,17 +1,28 @@
 from django.http import JsonResponse
 from db.user import add_user_db
 from db.transaction import add_transaction_db
-from db.transaction import find_all_transaction_db, find_transaction_db, delete_transaction_db, delete_transactions_list_db, update_transaction_db
+from db.transaction import find_all_transaction_db, find_transaction_db, delete_transaction_db, delete_transactions_list_db, update_transaction_db, find_one_transaction_db, get_transaction_statistics
 from db.userstatistics import update_statistics_db, get_statistics_db
 from db.pymongo_get_database import get_database
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 import json
+import jwt
 
 # from db. import create_user
 from django.views.decorators.csrf import csrf_exempt
 
-@csrf_exempt
+# @csrf_exempt
+
+def research(request):
+    
+    if request.method == "GET":
+                    
+        user_id = request.GET.get('userId_')
+        
+        result = get_transaction_statistics(user_id)
+        
+        return JsonResponse({"sample": result}, status=200)
 
 # Signup Route
 def register_user(request):
@@ -127,6 +138,17 @@ def find_a_transactions(request):
         input_word = request.GET.get('word')
                 
         transactionsList = find_transaction_db(userId, input_word)
+        
+        return JsonResponse({"transactionList": json.loads(dumps(transactionsList)), "success": True}, status=201)
+
+# Find One Transactions List Route
+def find_one_transactions(request):
+    
+    if request.method == 'GET':
+              
+        transactionId = request.GET.get('transactionId')
+                
+        transactionsList = find_one_transaction_db(transactionId)
         
         return JsonResponse({"transactionList": json.loads(dumps(transactionsList)), "success": True}, status=201)
 

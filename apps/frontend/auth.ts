@@ -7,8 +7,17 @@ export const { handlers, auth, signIn, signOut }: any = NextAuth({
     signIn: "/api/auth/signin",
   },
   callbacks: {
-    jwt({ token, user, account, profile, trigger }) {      
-        return token
+    jwt: async ({ user, token }: any) => {
+      if (user) {
+        token.uid = user.id;
+      }
+      return token;
+    },
+    session: ({ session, token, user }: any) => {
+      if (session.user) {
+        session.user.id = token.uid
+      }
+      return session
     }
-},
+  },
 })

@@ -17,7 +17,6 @@ import { statistics } from "@/lib/types"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { useRouter } from "next/navigation"
-import signup_logic from "../experiment"
 
 const Dashboard_stats = () => {
     const router = useRouter()
@@ -44,9 +43,11 @@ const Dashboard_stats = () => {
             } else {
                 alert("Error")
             }
+
         }
 
         getStatistics()
+
     }, [])
 
     return (

@@ -6,19 +6,18 @@ import auth_img from "../../assets/auth_page.jpg"
 
 import { Button } from "@/components/ui/button"
 
-import { useSetRecoilState } from "recoil"
-import { currentUserId } from "@/lib/state"
 import { SignIn } from "../../lib/action"
 
 export default function SigninDashboard() {
 
-    const setCurrentUserId = useSetRecoilState(currentUserId)
-
-
     return (
         <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
             <div className="flex items-center justify-center py-12">
-                <form className="mx-auto grid w-[350px] gap-6" action={ () => SignIn()}>
+                <form className="mx-auto grid w-[350px] gap-6" action={
+                    () => {
+                        SignIn()
+                    }
+                }>
                     <div className="grid gap-2 text-center">
                         <h1 className="text-3xl font-bold">Login</h1>
                         <p className="text-balance text-muted-foreground">
@@ -28,10 +27,7 @@ export default function SigninDashboard() {
                     <div className="grid gap-4">
                         <Button
                             className="w-full"
-                            type="submit"
-                            onClick={async () => {
-
-                            }}>
+                            type="submit">
                             Login with google
                         </Button>
                     </div>

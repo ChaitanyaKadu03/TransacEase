@@ -22,8 +22,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
-import { useRecoilValue } from "recoil"
-import { currentPage, Pages } from "@/lib/state"
+import { useRecoilValue, useSetRecoilState } from "recoil"
+import { currentPage, Pages, transactionId } from "@/lib/state"
 import axios from "axios"
 import { SignOut } from "../../lib/action"
 import { useEffect, useState } from "react"
@@ -55,15 +55,14 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { transaction } from "../../lib/types"
-import { DialogDescription } from "@radix-ui/react-dialog"
-import { Transaction_Details } from "./transaction_details"
 import { useRouter } from "next/navigation"
 
 const Header = () => {
     const thecurrentPage = useRecoilValue<Pages>(currentPage)
+    const setGlobalTransactionId = useSetRecoilState(transactionId)
 
     const [open, setOpen] = useState(true)
-    const [transactionId, setTransactionId] = useState("")
+    const [thetransactionId, setTheTransactionId] = useState("")
     const [value, setValue] = useState("")
     const [searchTitle, setSearchTitle] = useState<Array<transaction>>([
         {
@@ -153,7 +152,7 @@ const Header = () => {
                                                     onSelect={(currentValue) => {
                                                         setValue(currentValue === value ? "" : currentValue)
                                                         setOpen(false)
-                                                        setTransactionId(searchTitle._id.$oid)
+                                                        setTheTransactionId(searchTitle._id.$oid)
                                                     }}
                                                 >
                                                     {searchTitle.title}
@@ -172,8 +171,8 @@ const Header = () => {
                         </Popover>
                         <DialogFooter>
                             <Button type="submit" onClick={() => {
+                                setGlobalTransactionId(thetransactionId)
                                 router.push('/api/user/transactions/details')
-                                window.location.reload()
                             }
                             }>View Transaction</Button>
                         </DialogFooter>

@@ -7,7 +7,6 @@ import datetime
 dbname = get_database()
     
 user_collection = dbname["User"]
-
     
 def add_user_db(user):
     newUser = user_collection.insert_one(user)

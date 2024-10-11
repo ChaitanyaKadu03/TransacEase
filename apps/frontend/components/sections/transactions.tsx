@@ -98,12 +98,6 @@ export function Transactions() {
                 <TabsTrigger value="all">All</TabsTrigger>
               </TabsList>
               <div className="ml-auto flex items-center gap-2">
-                <Button size="sm" variant="outline" className="h-7 gap-1">
-                  <File className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Export
-                  </span>
-                </Button>
                 <Button size="sm" className="h-7 gap-1" onClick={() => {
                   router.push('/api/user/transactions/add')
                 }}>
@@ -186,11 +180,15 @@ export function Transactions() {
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
                                 <DropdownMenuItem onClick={async () => {
+                                  localStorage.setItem("transactionId", res._id.$oid)
+                                  router.push('/api/user/transactions/details')
+                                }}>Details</DropdownMenuItem>
+                                <DropdownMenuItem onClick={async () => {
                                   setTransactionId(res._id.$oid)
                                   router.push('/api/user/transactions/update')
                                 }}>Edit</DropdownMenuItem>
                                 <DropdownMenuItem onClick={async () => {
-                                  const result = await axios.post("http://127.0.0.1:8000/api/transaction/delete",  { "transactionId": res._id.$oid })
+                                  const result = await axios.post("http://127.0.0.1:8000/api/transaction/delete", { "transactionId": res._id.$oid })
 
                                   if (result.statusText == 'OK') {
                                     window.location.reload()

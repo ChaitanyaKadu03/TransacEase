@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('api/auth/research', views.research, name='research'),
+    
     path('api/auth/signup', views.register_user, name='register_user'),
     
     path('api/auth/signin', views.signin_user, name='signin_user'),
@@ -9,6 +11,8 @@ urlpatterns = [
     path('api/transactions', views.all_transactions, name='all_transactions'),
     
     path('api/add-transaction', views.add_transaction, name='add_transactions'),
+    
+    path('api/transactions/find', views.find_one_transactions, name='find_transactions'),
     
     path('api/transactions/search', views.find_a_transactions, name='search_transactions'),
     

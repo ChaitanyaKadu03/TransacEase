@@ -33,6 +33,7 @@ import axios from "axios"
 import { transaction } from "@/lib/types"
 import { useRecoilValue } from "recoil"
 import { currentUserId } from "@/lib/state"
+import { useSession } from "next-auth/react"
 
 const Dashboard_transactions = () => {
     const thecurrentUserId = useRecoilValue(currentUserId)
@@ -98,8 +99,8 @@ const Dashboard_transactions = () => {
                                     <TableHead className="hidden sm:table-cell">
                                         Proof Id
                                     </TableHead>
-                                    <TableHead className="hidden md:table-cell">
-                                        Date
+                                    <TableHead className="hidden md:table-cell max-w-60">
+                                        Description
                                     </TableHead>
                                     <TableHead className="text-right">Amount</TableHead>
                                 </TableRow>
@@ -127,7 +128,7 @@ const Dashboard_transactions = () => {
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="hidden md:table-cell">
-                                            {res.date.$date}
+                                            {res.description}
                                         </TableCell>
                                         <TableCell className="text-right">{res.amount} {res.currency}</TableCell>
                                     </TableRow>
