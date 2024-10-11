@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { useRecoilValue, useSetRecoilState } from "recoil"
-import { currentPage, Pages, transactionId } from "@/lib/state"
+import { currentPage, currentUserEmail, Pages, transactionId } from "@/lib/state"
 import axios from "axios"
 import { SignOut } from "../../lib/action"
 import { useEffect, useState } from "react"
@@ -57,9 +57,12 @@ import {
 import { transaction } from "../../lib/types"
 import { useRouter } from "next/navigation"
 
-const Header = () => {
+const Header = ({ profile_img, user }: any) => {
     const thecurrentPage = useRecoilValue<Pages>(currentPage)
     const setGlobalTransactionId = useSetRecoilState(transactionId)
+
+    const router = useRouter()
+    const router2 = useRouter()
 
     const [open, setOpen] = useState(true)
     const [thetransactionId, setTheTransactionId] = useState("")
@@ -67,12 +70,12 @@ const Header = () => {
     const [searchTitle, setSearchTitle] = useState<Array<transaction>>([
         {
             _id: { $oid: "6706debdc02ce99aaca2a1cf" },
-            userId: { $oid: "6706debdc02ce99aaca2a1cf" },
+            email: "abc@gmail.com",
             title: "string",
             description: "string",
             type: "DEBITED",
             category: "string",
-            date: { $date: '2024-10-02T15:33:23.930Z' },
+            date:  '2024-10-02T15:33:23.930Z' ,
             amount: 111,
             currency: "string",
             proof: "string",
@@ -80,12 +83,32 @@ const Header = () => {
         }
     ])
 
+    const setCurrentUserId = useSetRecoilState(currentUserEmail)
+
+    setCurrentUserId(user.email)
+
+    // useEffect(()=>{
+    //     async function signinCheck() {            
+    //         const result = await axios.get("http://127.0.0.1:8000/api/auth/signin", {
+    //             params: {
+    //                 email: user.email,
+    //             }
+    //         })  
+            
+    //         if (!result.data.success) {
+    //             router2.push('/api/user/signup')
+    //         }
+    //     }
+
+    //     signinCheck()
+    // },[])
+
     useEffect(() => {
         if (value) {
             async function search_transactions() {
                 const result = await axios.get("http://127.0.0.1:8000/api/transactions/search", {
                     params: {
-                        userId: "6706debdc02ce99aaca2a1cf",
+                        email: user.email,
                         word: value
                     }
                 })
@@ -100,8 +123,6 @@ const Header = () => {
     }, [value])
 
     const { setTheme } = useTheme()
-
-    const router = useRouter()
 
     return (
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:px-6 sm:ml-14 sm:py-4 sm:bg-transparent">
@@ -207,7 +228,7 @@ const Header = () => {
                         className="overflow-hidden rounded-full"
                     >
                         <Image
-                            src={user}
+                            src={profile_img}
                             width={36}
                             height={36}
                             alt="Avatar"

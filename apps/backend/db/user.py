@@ -12,12 +12,12 @@ def add_user_db(user):
     newUser = user_collection.insert_one(user)
     
     sampleTransaction = {
-        "userId": newUser.inserted_id,
+        "email": user['email'],
         "title": "Bought a new book",
         "description": "Harry potter: A curse child is now in my bag. All thanks to mom.",
         "type": "DEBITED",
         "category": "purchase",
-        "date": datetime.datetime.now(),
+        "date": "2024-10-11T21:32:57.484Z",
         "amount": 825,
         "currency": "₹",
         "proof": "12-234-5678-765",
@@ -26,18 +26,18 @@ def add_user_db(user):
     
     add_transaction_db(sampleTransaction)
     
-    add_statistics_db(newUser.inserted_id)
+    add_statistics_db(user["email"])
     
     return {
         "msg": "User Added Successfully",
-        "userId": str(newUser.inserted_id),
+        "email": user['email'],
         "success": True,
     }
 
-def update_user_db(userId,newuser):
+def update_user_db(email,newuser):
     user_collection.find_one_and_update(
         {
-            "_id": userId,
+            "_id": email,
         }, 
         {
             "$set" : newuser    
@@ -47,10 +47,10 @@ def update_user_db(userId,newuser):
         "msg": "Updated successfully!"
     }
 
-def delete_user_db(userId):
-    user_collection.find_one_and_delete({'_id': ObjectId(userId)})
+def delete_user_db(email):
+    user_collection.find_one_and_delete({'email': email})
     
-    delete_transaction_db(userId)
+    delete_transaction_db(email)
     
     return {
         "msg": "Deleted successfully!",

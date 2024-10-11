@@ -36,177 +36,44 @@ import { Separator } from "@/components//ui/separator"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { useRecoilValue } from "recoil"
-import { currentUserId } from "@/lib/state"
+import { currentUserEmail } from "@/lib/state"
 import { statistics, transaction } from "@/lib/types"
 
 import { addDays, addWeeks, addMonths } from "date-fns";
 
 export function Statistics() {
-    const thecurrentUserId = useRecoilValue(currentUserId)
-    const [verChart, setVerChart] = useState([
-        {
-            activity: "Credited",
-            value: 94,
-            label: 125,
-            fill: "var(--color-stand)",
-        },
-        {
-            activity: "Debited",
-            value: 34,
-            label: 68,
-            fill: "var(--color-exercise)",
-        },
-        {
-            activity: "Total",
-            value: 56,
-            label: 32,
-            fill: "var(--color-move)",
-        },
-    ])
-    const [weekAvg, setweekAvg] = useState(0)
-    const [monthlyAvg, setmonthlyAvg] = useState(0)
+    const thecurrentUserId = useRecoilValue(currentUserEmail)
+
     const [statistics, setStatistics] = useState<statistics>(
         {
             _id: { $oid: "6706debdc02ce99aaca2a1cf" },
-            userId: { $oid: "6706debdc02ce99aaca2a1cf" },
-            thisWeek: 0,
-            thisMonth: 0,
-            credited: 0,
-            debited: 0,
-            total: 0,
+            email: 'abc@gmail.com',
+            total: 125,
+            credited: 125,
+            debited: 125,
+            purchase: 125,
+            investment: 125,
+            income: 125,
+            savings: 125,
+            total_count: 2,
+            credited_count: 2,
+            debited_count: 2,
         }
     )
 
-
-    const [allTransactions, setAllTransactions] = useState<Array<transaction>>([
-        {
-            _id: { $oid: "6706debdc02ce99aaca2a1cf" },
-            userId: { $oid: "6706debdc02ce99aaca2a1cf" },
-            title: "string",
-            description: "string",
-            type: "DEBITED",
-            category: "string",
-            date: { $date: '2024-10-02T15:33:23.930Z' },
-            amount: 111,
-            currency: "string",
-            proof: "string",
-            paymentType: "string",
-        }
-    ])
-    const [last7DaysCost, setLast7DaysCost] = useState(0);
-    const [last7WeeksCost, setLast7WeeksCost] = useState(0);
-    const [last7MonthsCost, setLast7MonthsCost] = useState(0);
-
     useEffect(() => {
         async function getStatistics() {
-            const result = await axios.get("http://127.0.0.1:8000/api/statistics", { params: { userId: "6706debdc02ce99aaca2a1cf" } })
+            const result = await axios.get("http://127.0.0.1:8000/api/statistics/data", { params: { email: thecurrentUserId } })
 
             if (result.data.success) {
-                setStatistics(result.data.data)
+                setStatistics(result.data.result)
             } else {
                 alert("Error")
             }
-
-
-        }
-
-        async function get_all_transactions() {
-            const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: "6706debdc02ce99aaca2a1cf" } })
-            // const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: thecurrentUserId } })
-
-            if (result.data.success) {
-                setAllTransactions(result.data.transactionList)
-            } else {
-                alert("Error")
-            }
-
-
         }
 
         getStatistics()
-
-        get_all_transactions()
     }, [])
-
-    useEffect(() => {
-        function verticalGrapg() {
-            let maxVal = statistics.credited
-            if (statistics.total >= statistics.credited && statistics.total >= statistics.debited) {
-                maxVal = statistics.total + 1000
-            } else if (statistics.credited >= statistics.total && statistics.credited >= statistics.debited) {
-                maxVal = statistics.credited + 1000
-            } else {
-                maxVal = statistics.debited + 1000
-            }
-
-            setVerChart([
-                {
-                    activity: "Credited",
-                    value: (statistics.credited / maxVal) * 100,
-                    label: statistics.credited,
-                    fill: "var(--color-stand)",
-                },
-                {
-                    activity: "Debited",
-                    value: (statistics.debited / maxVal) * 100,
-                    label: statistics.debited,
-                    fill: "var(--color-exercise)",
-                },
-                {
-                    activity: "Total",
-                    value: (statistics.total / maxVal) * 100,
-                    label: statistics.total,
-                    fill: "var(--color-move)",
-                },
-            ])
-        }
-
-        setweekAvg(Math.floor(statistics.thisWeek / 7))
-        setmonthlyAvg(Math.floor(statistics.thisMonth / 30))
-        verticalGrapg()
-
-        function calculateTransactionCosts(transactions: Array<transaction>) {
-            const now = new Date();
-
-            // Date ranges
-            const last7Days = addDays(now, -7);
-            const last7Weeks = addWeeks(now, -7);
-            const last7Months = addMonths(now, -7);
-
-            // Initialize totals as 0 (even if no transactions exist, result should stay 0)
-            let daysTotal = 0;
-            let weeksTotal = 0;
-            let monthsTotal = 0;
-
-            // Iterate through transactions
-            transactions.forEach((transaction) => {
-                const transactionDate = new Date(transaction.date.$date); // Parse BSON date
-
-                // Add transaction to the last 7 days total if it falls within that range
-                if (transactionDate >= last7Days) {
-                    daysTotal += transaction.amount || 0; // If no amount, add 0
-                }
-
-                // Add transaction to the last 7 weeks total if it falls within that range
-                if (transactionDate >= last7Weeks) {
-                    weeksTotal += transaction.amount || 0; // If no amount, add 0
-                }
-
-                // Add transaction to the last 7 months total if it falls within that range
-                if (transactionDate >= last7Months) {
-                    monthsTotal += transaction.amount || 0; // If no amount, add 0
-                }
-            });
-
-            // Update state
-            setLast7DaysCost(daysTotal);
-            setLast7WeeksCost(weeksTotal);
-            setLast7MonthsCost(monthsTotal);
-        }
-
-        calculateTransactionCosts(allTransactions);
-
-    }, [statistics])
 
     return (
         <div className="chart-wrapper mx-auto flex max-w-6xl flex-col flex-wrap items-start justify-center gap-6 p-6 sm:flex-row sm:p-8">
@@ -215,9 +82,9 @@ export function Statistics() {
                     className="lg:max-w-md opacity-40" x-chunk="charts-01-chunk-0"
                 >
                     <CardHeader className="space-y-0 pb-2">
-                        <CardDescription>Today</CardDescription>
+                        <CardDescription>Amount Spend</CardDescription>
                         <CardTitle className="text-4xl tabular-nums">
-                            1,284{" "}
+                            {statistics.total}{" "}
                             <span className="font-sans text-sm font-normal tracking-normal text-muted-foreground">
                                 rs
                             </span>
@@ -461,17 +328,17 @@ export function Statistics() {
                     className="max-w-xs" x-chunk="charts-01-chunk-2"
                 >
                     <CardHeader>
-                        <CardTitle>Average Cost</CardTitle>
+                        <CardTitle>Credited/Debited %</CardTitle>
                         <CardDescription>
-                            This is to represent the average transaction cost for daily...
+                            This is to represent the credited and debited percentage...
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="grid gap-4">
                         <div className="grid auto-rows-min gap-2">
                             <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                                {monthlyAvg}
+                                {Math.floor((statistics.credited / statistics.total) * 100)} %
                                 <span className="text-sm font-normal text-muted-foreground">
-                                    Monthly
+                                    Credited
                                 </span>
                             </div>
                             <ChartContainer
@@ -494,8 +361,8 @@ export function Statistics() {
                                     }}
                                     data={[
                                         {
-                                            date: "Monthly",
-                                            steps: 10000,
+                                            date: "Credited",
+                                            steps: Math.floor((statistics.credited / statistics.total) * 100),
                                         },
                                     ]}
                                 >
@@ -520,9 +387,9 @@ export function Statistics() {
                         </div>
                         <div className="grid auto-rows-min gap-2">
                             <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
-                                {weekAvg}
+                                {Math.floor((statistics.debited / statistics.total) * 100)} %
                                 <span className="text-sm font-normal text-muted-foreground">
-                                    Weekly
+                                    Debited
                                 </span>
                             </div>
                             <ChartContainer
@@ -545,8 +412,8 @@ export function Statistics() {
                                     }}
                                     data={[
                                         {
-                                            date: "Weekly",
-                                            steps: 10000,
+                                            date: "Debited",
+                                            steps: Math.floor((statistics.debited / statistics.total) * 100),
                                         },
                                     ]}
                                 >
@@ -575,14 +442,14 @@ export function Statistics() {
                     className="max-w-xs" x-chunk="charts-01-chunk-3"
                 >
                     <CardHeader className="p-4 pb-0">
-                        <CardTitle>Week's Average</CardTitle>
+                        <CardTitle>Credited Average</CardTitle>
                         <CardDescription>
-                            Over the last 7 days, your average transaction cost per day was...
+                            This is credited total divide by number of times amount credited...
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
                         <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
-                            {weekAvg}
+                            {Math.floor(statistics.credited / statistics.credited_count)}
                             <span className="text-sm font-normal text-muted-foreground">
                                 ₹
                             </span>
@@ -682,7 +549,26 @@ export function Statistics() {
                                     top: 0,
                                     bottom: 10,
                                 }}
-                                data={verChart}
+                                data={[
+                                    {
+                                        activity: "Credited",
+                                        value: Math.floor((statistics.credited / statistics.total) * 100),
+                                        label: Math.floor((statistics.credited / statistics.total) * 100),
+                                        fill: "var(--color-stand)",
+                                    },
+                                    {
+                                        activity: "Debited",
+                                        value: Math.floor((statistics.debited / statistics.total) * 100),
+                                        label: Math.floor((statistics.debited / statistics.total) * 100),
+                                        fill: "var(--color-exercise)",
+                                    },
+                                    {
+                                        activity: "Total",
+                                        value: Math.floor((statistics.total / statistics.total) * 100),
+                                        label: Math.floor((statistics.total / statistics.total) * 100),
+                                        fill: "var(--color-move)",
+                                    },
+                                ]}
                                 layout="vertical"
                                 barSize={32}
                                 barGap={2}
@@ -801,7 +687,26 @@ export function Statistics() {
                                     top: -10,
                                     bottom: -10,
                                 }}
-                                data={verChart}
+                                data={[
+                                    {
+                                        activity: "Credited",
+                                        value: statistics.credited,
+                                        label: statistics.credited,
+                                        fill: "var(--color-stand)",
+                                    },
+                                    {
+                                        activity: "Total",
+                                        value: statistics.total,
+                                        label: statistics.total,
+                                        fill: "var(--color-move)",
+                                    },
+                                    {
+                                        activity: "Debited",
+                                        value: statistics.debited,
+                                        label: statistics.debited,
+                                        fill: "var(--color-exercise)",
+                                    },
+                                ]}
                                 innerRadius="20%"
                                 barSize={24}
                                 startAngle={90}
@@ -822,14 +727,14 @@ export function Statistics() {
                     className="max-w-xs" x-chunk="charts-01-chunk-6"
                 >
                     <CardHeader className="p-4 pb-0">
-                        <CardTitle>Monthly Average</CardTitle>
+                        <CardTitle>Debited Average</CardTitle>
                         <CardDescription>
-                            You're spending per day an average of ....
+                            This is debited total divide by number of times amount debited...
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-2">
                         <div className="flex items-baseline gap-2 text-3xl font-bold tabular-nums leading-none">
-                            {monthlyAvg}
+                            {Math.floor(statistics.debited / statistics.debited_count)}
                             <span className="text-sm font-normal text-muted-foreground">
                                 ₹
                             </span>

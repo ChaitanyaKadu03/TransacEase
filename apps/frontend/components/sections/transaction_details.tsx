@@ -33,7 +33,10 @@ import { transaction } from "../../lib/types"
 export function Transaction_Details() {
     const router = useRouter()
 
-    const data = localStorage.getItem("transactionId")
+    const theTransactionId = useRecoilValue(transactionId)
+
+    const data = theTransactionId
+    // const data = localStorage.getItem("transactionId")
 
     const [transaction, setTransaction] = React.useState<transaction>()
 

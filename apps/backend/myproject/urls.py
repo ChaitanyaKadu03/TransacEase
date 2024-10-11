@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('api/auth/research', views.research, name='research'),
+    # path('api/auth/research', views.research, name='research'),
     
     path('api/auth/signup', views.register_user, name='register_user'),
     
@@ -25,4 +25,6 @@ urlpatterns = [
     path('api/statistics/update', views.update_statistics , name='update_statistics'),
     
     path('api/statistics', views.get_statistics , name='get_statistics'),
+    
+    path('api/statistics/data', views.get_statistics_data , name='get_statistics_data'),
 ]

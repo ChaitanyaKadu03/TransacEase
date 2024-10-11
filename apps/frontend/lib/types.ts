@@ -2,12 +2,12 @@ import { Pages } from "./state";
 
 export type transaction = {
     _id: oid;
-    userId: oid;
+    email: string;
     title: string;
     description: string;
     type: "DEBITED" | "CREDITED";
     category: string;
-    date: dateFormat;
+    date: string;
     amount: number;
     currency: string;
     proof: string | null;
@@ -24,12 +24,17 @@ type oid = {
 
 export type statistics = {
     _id: oid;
-    userId: oid;
-    thisWeek: number;
-    thisMonth: number;
+    email: string;
+    total: number;
     credited: number;
     debited: number;
-    total: number;
+    purchase: number;
+    investment: number;
+    income: number;
+    savings: number;
+    total_count: number,
+    credited_count: number,
+    debited_count: number,
 };
 
 export type pagesType = {

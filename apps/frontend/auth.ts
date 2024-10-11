@@ -7,7 +7,7 @@ export const { handlers, auth, signIn, signOut }: any = NextAuth({
     signIn: "/api/auth/signin",
   },
   callbacks: {
-    jwt: async ({ user, token }: any) => {
+    jwt: async ({ user, token }: any) => {      
       if (user) {
         token.uid = user.id;
       }

@@ -22,7 +22,7 @@ import axios from "axios"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { useRecoilValue } from "recoil"
-import { transactionId } from "../../lib/state"
+import { currentUserEmail, transactionId } from "../../lib/state"
 
 export function UpdateTransaction() {
     const [title, setTitle] = useState('')
@@ -36,6 +36,8 @@ export function UpdateTransaction() {
     const theTransactionId = useRecoilValue(transactionId)
 
     const router = useRouter()
+
+    const theCurrentUserEmail = useRecoilValue(currentUserEmail)
 
     return (
         <Card className="w-[350px]">
@@ -150,7 +152,7 @@ export function UpdateTransaction() {
                         const result = await axios.put("http://127.0.0.1:8000/api/transaction/update", {
                             transactionId: theTransactionId,
                             newTransaction: {
-                                userId: '6706debdc02ce99aaca2a1cf',
+                                email: theCurrentUserEmail,
                                 title,
                                 description,
                                 type,

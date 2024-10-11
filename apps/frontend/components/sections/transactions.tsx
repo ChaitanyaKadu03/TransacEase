@@ -41,7 +41,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 import { useRecoilValue, useSetRecoilState } from "recoil"
-import { currentUserId, transactionId } from "@/lib/state"
+import { currentUserEmail, transactionId } from "@/lib/state"
 import { useEffect, useState } from "react"
 import { transaction } from "@/lib/types"
 import axios from "axios"
@@ -55,16 +55,17 @@ export function Transactions() {
 
   const router = useRouter()
 
-  const thecurrentUserId = useRecoilValue(currentUserId)
+  const thecurrentUserEmail = useRecoilValue(currentUserEmail)
+
   const [allTransactions, setAllTransactions] = useState<Array<transaction>>([
     {
       _id: { $oid: "6706debdc02ce99aaca2a1cf" },
-      userId: { $oid: "6706debdc02ce99aaca2a1cf" },
+      email: "abc@gmail.com",
       title: "string",
       description: "string",
       type: "DEBITED",
       category: "string",
-      date: { $date: '2024-10-02T15:33:23.930Z' },
+      date:  '2024-10-02T15:33:23.930Z' ,
       amount: 111,
       currency: "string",
       proof: "string",
@@ -74,8 +75,7 @@ export function Transactions() {
 
   useEffect(() => {
     async function get_all_transactions() {
-      const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: "6706debdc02ce99aaca2a1cf" } })
-      // const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: thecurrentUserId } })
+      const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { email: thecurrentUserEmail } })
 
       if (result.data.success) {
         setAllTransactions(result.data.transactionList)
@@ -164,7 +164,7 @@ export function Transactions() {
                             {res._id.$oid}
                           </TableCell>
                           <TableCell className="hidden md:table-cell">
-                            {res.date.$date}
+                            {res.date}
                           </TableCell>
                           <TableCell>
                             <DropdownMenu>
@@ -180,7 +180,8 @@ export function Transactions() {
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
                                 <DropdownMenuItem onClick={async () => {
-                                  localStorage.setItem("transactionId", res._id.$oid)
+                                  setTransactionId(res._id.$oid)
+                                  // localStorage.setItem("transactionId", res._id.$oid)
                                   router.push('/api/user/transactions/details')
                                 }}>Details</DropdownMenuItem>
                                 <DropdownMenuItem onClick={async () => {

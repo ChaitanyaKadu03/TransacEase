@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from db.user import add_user_db
 from db.transaction import add_transaction_db
 from db.transaction import find_all_transaction_db, find_transaction_db, delete_transaction_db, delete_transactions_list_db, update_transaction_db, find_one_transaction_db, get_transaction_statistics
-from db.userstatistics import update_statistics_db, get_statistics_db
+from db.userstatistics import update_statistics_db, get_statistics_db, calculate_statistics
 from db.pymongo_get_database import get_database
 from bson.json_util import dumps
 from bson.objectid import ObjectId
@@ -13,16 +13,6 @@ import jwt
 from django.views.decorators.csrf import csrf_exempt
 
 # @csrf_exempt
-
-def research(request):
-    
-    if request.method == "GET":
-                    
-        user_id = request.GET.get('userId_')
-        
-        result = get_transaction_statistics(user_id)
-        
-        return JsonResponse({"sample": result}, status=200)
 
 # Signup Route
 def register_user(request):
@@ -75,13 +65,12 @@ def signin_user(request):
         if userData:
             data = {
                 "msg": "User found",
-                "userId": str(userData["_id"]),
                 "success": True 
             }
             return JsonResponse(data, status=200)
         
         else:  
-            return JsonResponse({"msg": "User not found", "success": False}, status=404)
+            return JsonResponse({"msg": "User not found", "success": False}, status=200)
         
         
 # Add transaction Route
@@ -90,10 +79,9 @@ def add_transaction(request):
     if request.method == 'POST':
          
         transaction = json.loads(request.body)
-        print(transaction)
         
         newTransaction = {
-        "userId": ObjectId(transaction["userId"]),
+        "email": transaction["email"],
         "title": transaction["title"],
         "description": transaction["description"],
         "type": transaction["type"],
@@ -110,7 +98,6 @@ def add_transaction(request):
         print(result["success"])
         
         if result["success"]:
-            print("---------------------")
             return JsonResponse(result, status=201)
             
         return JsonResponse({"msg": "Failed!", "success": False}, status=400)
@@ -121,9 +108,9 @@ def all_transactions(request):
     
     if request.method == 'GET':
         
-        userId = request.GET.get('userId')
+        email = request.GET.get('email')
         
-        transactionsList = find_all_transaction_db(userId)
+        transactionsList = find_all_transaction_db(email)
         
         return JsonResponse({"transactionList": json.loads(dumps(transactionsList)), "success": True}, status=200)
 
@@ -133,11 +120,11 @@ def find_a_transactions(request):
     
     if request.method == 'GET':
         
-        userId = request.GET.get('userId')
+        email = request.GET.get('email')
         
         input_word = request.GET.get('word')
                 
-        transactionsList = find_transaction_db(userId, input_word)
+        transactionsList = find_transaction_db(email, input_word)
         
         return JsonResponse({"transactionList": json.loads(dumps(transactionsList)), "success": True}, status=201)
 
@@ -172,7 +159,7 @@ def delete_all_transaction(request):
         
         user_input = json.loads(request.body)
         
-        result = delete_transactions_list_db(user_input['userId'])
+        result = delete_transactions_list_db(user_input['email'])
         
         return JsonResponse(result, status=200)
 
@@ -198,7 +185,7 @@ def update_statistics(request):
         
         user_input = json.loads(request.body)
         
-        result = update_statistics_db(user_input['userId'], user_input["newStatistics"])
+        result = update_statistics_db(user_input['email'], user_input["newStatistics"])
         
         return JsonResponse(result, status=200)
 
@@ -208,8 +195,18 @@ def get_statistics(request):
     
     if request.method == 'GET':
         
-        userId = request.GET.get('userId')
+        email = request.GET.get('email')
         
-        result = get_statistics_db(userId)
+        result = get_statistics_db(email)
         
         return JsonResponse(result, status=200)
+    
+def get_statistics_data(request):
+    
+    if request.method == "GET":
+        
+        email = request.GET.get('email')
+        
+        result = calculate_statistics(email)
+        
+        return JsonResponse({'result':result, 'success': True}, status=200)

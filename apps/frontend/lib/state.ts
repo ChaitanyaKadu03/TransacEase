@@ -15,8 +15,8 @@ export const currentPage = atom<Pages>({
     default: Pages.dashboard
 })
 
-export const currentUserId = atom<string | null>({
-    key: 'currentUserId',
+export const currentUserEmail = atom<string | null>({
+    key: 'currentUserEmail',
     default: null
 })
 

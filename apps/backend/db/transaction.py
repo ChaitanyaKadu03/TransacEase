@@ -46,17 +46,17 @@ def delete_transaction_db(transactionId):
         "success": False
     }
     
-def delete_transactions_list_db(userId):
-    transaction_collection.delete_many({"userId": ObjectId(userId)})
+def delete_transactions_list_db(email):
+    transaction_collection.delete_many({"email": email})
     
     return {
         "msg": "Transactions list Deleted!"
     }
     
-def find_transaction_db(userId, word):
+def find_transaction_db(email, word):
     searchList = transaction_collection.find(
         {
-            "userId": ObjectId(userId), 
+            "email": email, 
             "title": {"$regex": f"{word}", "$options": "i"}
         }
     ).limit( 5 )
@@ -72,17 +72,17 @@ def find_one_transaction_db(transactionId):
     
     return searchList
     
-def find_all_transaction_db(userId):
+def find_all_transaction_db(email):
     
     searchList = transaction_collection.find(
         {
-            "userId": ObjectId(userId), 
+            "email": email, 
         }
     )
     
     return list(searchList)
 
-def get_transaction_statistics(user_id):
+def get_transaction_statistics(email):
 
     now = datetime.datetime.now()
     
@@ -92,7 +92,7 @@ def get_transaction_statistics(user_id):
     month_start = now.replace(day=1)
 
     # Fetch transactions for the current user
-    transactions = list(transaction_collection.find({"userId": ObjectId(user_id)}))
+    transactions = list(transaction_collection.find({"email": email}))
 
     if not transactions:
         return {

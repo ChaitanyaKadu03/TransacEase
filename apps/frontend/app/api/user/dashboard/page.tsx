@@ -1,9 +1,8 @@
-"use client"
-
 import Dashboard_stats from '../../../../components/sections/dashboard_stats'
 import Dashboard_transactions from '../../../../components/sections/dashboard_transactions'
 
-const page = () => {
+const page = async () => {
+    
     return (
         <>
             <Dashboard_stats />

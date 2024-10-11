@@ -12,7 +12,7 @@ import {
 
 import { Progress } from "@/components/ui/progress"
 import { useRecoilValue } from "recoil"
-import { currentUserId } from "@/lib/state"
+import { currentUserEmail } from "@/lib/state"
 import { statistics } from "@/lib/types"
 import { useEffect, useState } from "react"
 import axios from "axios"
@@ -21,25 +21,33 @@ import { useRouter } from "next/navigation"
 const Dashboard_stats = () => {
     const router = useRouter()
 
-    const thecurrentUserId = useRecoilValue(currentUserId)
     const [statistics, setStatistics] = useState<statistics>(
         {
             _id: { $oid: "6706debdc02ce99aaca2a1cf" },
-            userId: { $oid: "6706debdc02ce99aaca2a1cf" },
-            thisWeek: 0,
-            thisMonth: 0,
-            credited: 0,
-            debited: 0,
-            total: 0,
+            email: "abc@getMaxListeners.com",
+            total: 125,
+            credited: 125,
+            debited: 125,
+            purchase: 125,
+            investment: 125,
+            income: 125,
+            savings: 125,
+            total_count: 2,
+            credited_count: 2,
+            debited_count: 2,
         }
     )
 
+    const theCurrentUserEmail = useRecoilValue(currentUserEmail)
+
     useEffect(() => {
         async function getStatistics() {
-            const result = await axios.get("http://127.0.0.1:8000/api/statistics", { params: { userId: "6706debdc02ce99aaca2a1cf" } })
+            const result = await axios.get("http://127.0.0.1:8000/api/statistics/data", { params: { email: theCurrentUserEmail } })
 
             if (result.data.success) {
-                setStatistics(result.data.data)
+                console.log(result.data.result);
+
+                setStatistics(result.data.result)
             } else {
                 alert("Error")
             }
@@ -69,30 +77,30 @@ const Dashboard_stats = () => {
             </Card>
             <Card x-chunk="dashboard-05-chunk-1" className="max-sm:w-full">
                 <CardHeader className="pb-2">
-                    <CardDescription>This Week</CardDescription>
-                    <CardTitle className="text-4xl">₹{statistics.thisWeek}</CardTitle>
+                    <CardDescription>Total Credited</CardDescription>
+                    <CardTitle className="text-4xl">₹{statistics.credited}</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="min-w-44">
                     <div className="text-xs text-muted-foreground">
-                        +25% from last week
+                        {Math.floor((statistics.credited / statistics.total) * 100)}% of the total
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Progress value={25} aria-label="25% increase" />
+                    <Progress value={Math.floor((statistics.credited / statistics.total) * 100)} aria-label={`${Math.floor((statistics.credited / statistics.total) * 100)}% increase`} />
                 </CardFooter>
             </Card>
             <Card x-chunk="dashboard-05-chunk-2" className="max-sm:w-full">
                 <CardHeader className="pb-2">
-                    <CardDescription>This Month</CardDescription>
-                    <CardTitle className="text-4xl">₹{statistics.thisMonth}</CardTitle>
+                    <CardDescription>Total Debited</CardDescription>
+                    <CardTitle className="text-4xl">₹{statistics.debited}</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="min-w-44">
                     <div className="text-xs text-muted-foreground">
-                        +10% from last month
+                        {Math.floor((statistics.debited / statistics.total) * 100)}% of the total
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Progress value={12} aria-label="12% increase" />
+                    <Progress value={Math.floor((statistics.debited / statistics.total) * 100)} aria-label={`${Math.floor((statistics.debited / statistics.total) * 100)} increase`} />
                 </CardFooter>
             </Card>
         </div>

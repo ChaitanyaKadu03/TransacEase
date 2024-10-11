@@ -32,20 +32,22 @@ import {
 import axios from "axios"
 import { transaction } from "@/lib/types"
 import { useRecoilValue } from "recoil"
-import { currentUserId } from "@/lib/state"
+import { currentUserEmail } from "@/lib/state"
 import { useSession } from "next-auth/react"
 
 const Dashboard_transactions = () => {
-    const thecurrentUserId = useRecoilValue(currentUserId)
+
+    const theCurrentUserEmail = useRecoilValue(currentUserEmail)
+
     const [allTransactions, setAllTransactions] = React.useState<Array<transaction>>([
         {
             _id: { $oid: "6706debdc02ce99aaca2a1cf" },
-            userId: { $oid: "6706debdc02ce99aaca2a1cf" },
+            email: 'abc@gmail.com',
             title: "string",
             description: "string",
             type: "DEBITED",
             category: "string",
-            date: { $date: '2024-10-02T15:33:23.930Z' },
+            date:  '2024-10-02T15:33:23.930Z' ,
             amount: 111,
             currency: "string",
             proof: "string",
@@ -56,8 +58,7 @@ const Dashboard_transactions = () => {
 
     React.useEffect(() => {
         async function get_all_transactions() {
-            const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: "6706debdc02ce99aaca2a1cf" } })
-            // const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { userId: thecurrentUserId } })
+            const result = await axios.get("http://127.0.0.1:8000/api/transactions", { params: { email: theCurrentUserEmail } })
 
             if (result.data.success) {
                 setAllTransactions(result.data.transactionList)
