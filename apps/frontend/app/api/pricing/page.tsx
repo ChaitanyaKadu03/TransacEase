@@ -1,9 +1,9 @@
 import React from 'react'
-import HomePage from '../components/pg/home_pg'
+import Pricing_Pg from '../../../components/pg/pricing_pg'
 
 const page = () => {
   return (
-    <HomePage />
+    <Pricing_Pg />
   )
 }
 

@@ -1,9 +1,9 @@
 import React from 'react'
-import HomePage from '../components/pg/home_pg'
+import About_Pg from '../../../components/pg/about_pg'
 
 const page = () => {
   return (
-    <HomePage />
+    <About_Pg />
   )
 }
 

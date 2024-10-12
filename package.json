@@ -1,5 +1,5 @@
 {
-  "name": "TransacEase",
+  "name": "transacease",
   "private": true,
   "scripts": {
     "build": "turbo build",
