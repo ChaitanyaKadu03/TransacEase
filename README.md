@@ -21,8 +21,6 @@ Transacease is an advanced platform designed for efficient transaction tracking.
 - *Database*: [MongoDB](https://www.mongodb.com/)
 - *State Management*: [Recoil.js](https://recoiljs.org/)
 - *UI Components*: [Shadcn UI](https://ui.shadcn.dev/)
-- *Containerization*: [Docker](https://www.docker.com/)
-- *CI/CD*: Integrated continuous integration and deployment
 
 ---
 
