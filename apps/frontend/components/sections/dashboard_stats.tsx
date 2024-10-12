@@ -44,9 +44,7 @@ const Dashboard_stats = () => {
         async function getStatistics() {
             const result = await axios.get("http://127.0.0.1:8000/api/statistics/data", { params: { email: theCurrentUserEmail } })
 
-            if (result.data.success) {
-                console.log(result.data.result);
-
+            if (result.data.success) {                
                 setStatistics(result.data.result)
             } else {
                 alert("Error")

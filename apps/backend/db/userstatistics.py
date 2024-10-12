@@ -10,12 +10,16 @@ statistics_collection = dbname["Statistics"]
 def add_statistics_db(email):
     statistics_collection.insert_one({
         "email": email,
-        "thisWeek": 125,
-        "thisMonth": 125,
-        "thisYear": 125,
+        "total": 125,
         "credited": 125,
         "debited": 125,
-        "total": 125,
+        "purchase": 125,
+        "investment": 125,
+        "income": 125,
+        "savings": 125,
+        "total_count": 2,
+        "credited_count": 2,
+        "debited_count": 2,
     })
     
     return {

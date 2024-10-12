@@ -29,10 +29,10 @@ export function AddTransaction() {
     const [description, setDescription] = useState('')
     const [amount, setAmount] = useState('')
     const [proof, setProof] = useState('')
-    const [type, setType] = useState('')
-    const [category, setCategory] = useState('')
-    const [currency, setCurrency] = useState('')
-    const [paymentType, setPaymentType] = useState('')
+    const [type, setType] = useState('DEBITED')
+    const [category, setCategory] = useState('purchase')
+    const [currency, setCurrency] = useState('₹')
+    const [paymentType, setPaymentType] = useState('card')
     const [currentForm, setCurrentForm] = useState<"1" | "2">("1")
 
     const router = useRouter()
@@ -103,6 +103,7 @@ export function AddTransaction() {
                                         onChange={(e) => setAmount(e.target.value)}
                                         id="amount"
                                         placeholder="1200"
+                                        type="number"
                                         required
                                     />
                                 </div>
@@ -121,7 +122,7 @@ export function AddTransaction() {
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="type">Type</Label>
                                     <Select onValueChange={setType} required>
-                                        <SelectTrigger id="type">
+                                        <SelectTrigger id="type" >
                                             <SelectValue placeholder="Select" />
                                         </SelectTrigger>
                                         <SelectContent position="popper">
@@ -132,7 +133,7 @@ export function AddTransaction() {
                                 </div>
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="category">Category</Label>
-                                    <Select onValueChange={setCategory} required>
+                                    <Select onValueChange={setCategory} defaultValue="purchase" required>
                                         <SelectTrigger id="category">
                                             <SelectValue placeholder="Select" />
                                         </SelectTrigger>
@@ -146,7 +147,7 @@ export function AddTransaction() {
                                 </div>
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="currency">Currency</Label>
-                                    <Select onValueChange={setCurrency} required>
+                                    <Select onValueChange={setCurrency} defaultValue="₹" required>
                                         <SelectTrigger id="currency">
                                             <SelectValue placeholder="Select" />
                                         </SelectTrigger>
@@ -157,7 +158,7 @@ export function AddTransaction() {
                                 </div>
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="payment_type">Payment Type</Label>
-                                    <Select onValueChange={setPaymentType} required>
+                                    <Select onValueChange={setPaymentType} defaultValue="card" required>
                                         <SelectTrigger id="payment_type">
                                             <SelectValue placeholder="Select" />
                                         </SelectTrigger>

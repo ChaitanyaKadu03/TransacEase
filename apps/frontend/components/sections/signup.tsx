@@ -43,8 +43,7 @@ export function Signup() {
                     })
 
                     if (result.data.success) {
-                        router.push('/api/user/dashboard')
-                        window.location.reload()
+                        router.push('/')
                     } else {
                         alert("Please check the credentials")
                     }

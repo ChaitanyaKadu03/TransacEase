@@ -51,15 +51,12 @@ def signin_user(request):
          
         email = request.GET.get('email')
         
-        password = request.GET.get('password')
-        
         dbname = get_database()
     
         user_collection = dbname["User"]
         
         userData = user_collection.find_one({
             "email": email,
-            "password": password
         })
                 
         if userData:
@@ -134,7 +131,9 @@ def find_one_transactions(request):
     if request.method == 'GET':
               
         transactionId = request.GET.get('transactionId')
-                
+
+        print(transactionId)
+        
         transactionsList = find_one_transaction_db(transactionId)
         
         return JsonResponse({"transactionList": json.loads(dumps(transactionsList)), "success": True}, status=201)
@@ -170,8 +169,6 @@ def update_transaction(request):
     if request.method == 'PUT':
         
         user_input = json.loads(request.body)
-        
-        print(user_input['transactionId'])
         
         result = update_transaction_db(user_input['transactionId'], user_input["newTransaction"])
         

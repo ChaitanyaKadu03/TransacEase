@@ -180,12 +180,12 @@ export function Transactions() {
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
                                 <DropdownMenuItem onClick={async () => {
-                                  setTransactionId(res._id.$oid)
-                                  // localStorage.setItem("transactionId", res._id.$oid)
+                                  // setTransactionId(res._id.$oid)
+                                  localStorage.setItem("transactionId", res._id.$oid)
                                   router.push('/api/user/transactions/details')
                                 }}>Details</DropdownMenuItem>
                                 <DropdownMenuItem onClick={async () => {
-                                  setTransactionId(res._id.$oid)
+                                  localStorage.setItem("transactionId", res._id.$oid)
                                   router.push('/api/user/transactions/update')
                                 }}>Edit</DropdownMenuItem>
                                 <DropdownMenuItem onClick={async () => {

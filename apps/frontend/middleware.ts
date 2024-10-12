@@ -27,5 +27,10 @@ export async function middleware(req: NextRequest) {
         }
     }
 
+    if (req.nextUrl.pathname == '/') {
+        const loginUrl = new URL("/api/auth/signin", req.url);
+        return NextResponse.redirect(loginUrl);
+    }
+
     return NextResponse.next();
 }

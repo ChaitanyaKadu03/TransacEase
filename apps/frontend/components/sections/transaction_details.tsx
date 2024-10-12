@@ -35,8 +35,8 @@ export function Transaction_Details() {
 
     const theTransactionId = useRecoilValue(transactionId)
 
-    const data = theTransactionId
-    // const data = localStorage.getItem("transactionId")
+    // const data = theTransactionId
+    const data = localStorage.getItem("transactionId")
 
     const [transaction, setTransaction] = React.useState<transaction>()
 

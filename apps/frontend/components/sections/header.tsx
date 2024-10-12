@@ -62,7 +62,6 @@ const Header = ({ profile_img, user }: any) => {
     const setGlobalTransactionId = useSetRecoilState(transactionId)
 
     const router = useRouter()
-    const router2 = useRouter()
 
     const [open, setOpen] = useState(true)
     const [thetransactionId, setTheTransactionId] = useState("")
@@ -87,21 +86,25 @@ const Header = ({ profile_img, user }: any) => {
 
     setCurrentUserId(user.email)
 
-    // useEffect(()=>{
-    //     async function signinCheck() {            
-    //         const result = await axios.get("http://127.0.0.1:8000/api/auth/signin", {
-    //             params: {
-    //                 email: user.email,
-    //             }
-    //         })  
+    useEffect(()=>{
+        async function signinCheck() {            
+            const result = await axios.get("http://127.0.0.1:8000/api/auth/signin", {
+                params: {
+                    email: user.email,
+                }
+            })  
             
-    //         if (!result.data.success) {
-    //             router2.push('/api/user/signup')
-    //         }
-    //     }
+            if (!result.data.success) {  
+                console.log(user.email);
+                console.log(result.data.success);
+                console.log(result.data);
+                              
+                router.push('/api/user/signup')
+            }
+        }
 
-    //     signinCheck()
-    // },[])
+        signinCheck()
+    },[])
 
     useEffect(() => {
         if (value) {
