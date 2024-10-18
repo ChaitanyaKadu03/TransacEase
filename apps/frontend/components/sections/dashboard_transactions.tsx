@@ -47,7 +47,7 @@ const Dashboard_transactions = () => {
             description: "string",
             type: "DEBITED",
             category: "string",
-            date:  '2024-10-02T15:33:23.930Z' ,
+            date: '2024-10-02T15:33:23.930Z',
             amount: 111,
             currency: "string",
             proof: "string",
@@ -100,7 +100,7 @@ const Dashboard_transactions = () => {
                                     <TableHead className="hidden sm:table-cell">
                                         Proof Id
                                     </TableHead>
-                                    <TableHead className="hidden md:table-cell max-w-60">
+                                    <TableHead className="hidden md:table-cell">
                                         Description
                                     </TableHead>
                                     <TableHead className="text-right">Amount</TableHead>
@@ -128,7 +128,7 @@ const Dashboard_transactions = () => {
                                                 {res.proof}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell className="hidden md:table-cell">
+                                        <TableCell className="hidden md:table-cell max-w-72">
                                             {res.description}
                                         </TableCell>
                                         <TableCell className="text-right">{res.amount} {res.currency}</TableCell>
