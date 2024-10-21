@@ -23,15 +23,3 @@ Transacease is an advanced platform designed for efficient transaction tracking.
 - *UI Components*: [Shadcn UI](https://ui.shadcn.dev/)
 
 ---
-
-## *Use Cases*
-
-- *Individuals*:
-  - Track your crypto, stocks, and other personal financial activities. Version 2.0 will make it more seamless.
-  - Easily manage your transactions via a clear and user-friendly interface.
-  
-- *Companies*:
-  - Automate your expense tracking by integrating Transacease into your infrastructure.
-  - Reduce time spent on custom financial management solutions with a streamlined platform.
-
----
