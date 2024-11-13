@@ -5,7 +5,7 @@ export async function middleware(req: NextRequest) {
 
     if (req.nextUrl.pathname.startsWith('/api/user') && !await getToken({ req, secret: process.env.NEXTAUTH_SECRET })) {
         const loginUrl = new URL("/api/auth/signin", req.url);
-        return NextResponse.redirect("loginUrl");
+        return NextResponse.redirect(loginUrl);
       }
 
     if (req.nextUrl.pathname.startsWith('/api/auth')) {

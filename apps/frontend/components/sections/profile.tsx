@@ -25,6 +25,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { SignOut } from "../../lib/action"
+import { redirect } from "next/navigation"
 
 export function Profile() {
 

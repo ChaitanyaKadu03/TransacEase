@@ -55,7 +55,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { transaction } from "../../lib/types"
-import { useRouter } from "next/navigation"
+import { redirect, useRouter } from "next/navigation"
 
 const Header = ({ profile_img, user }: any) => {
     const thecurrentPage = useRecoilValue<Pages>(currentPage)
@@ -74,7 +74,7 @@ const Header = ({ profile_img, user }: any) => {
             description: "string",
             type: "DEBITED",
             category: "string",
-            date:  '2024-10-02T15:33:23.930Z' ,
+            date: '2024-10-02T15:33:23.930Z',
             amount: 111,
             currency: "string",
             proof: "string",
@@ -86,25 +86,25 @@ const Header = ({ profile_img, user }: any) => {
 
     setCurrentUserId(user.email)
 
-    useEffect(()=>{
-        async function signinCheck() {            
+    useEffect(() => {
+        async function signinCheck() {
             const result = await axios.get("http://127.0.0.1:8000/api/auth/signin", {
                 params: {
                     email: user.email,
                 }
-            })  
-            
-            if (!result.data.success) {  
+            })
+
+            if (!result.data.success) {
                 console.log(user.email);
                 console.log(result.data.success);
                 console.log(result.data);
-                              
+
                 router.push('/api/user/signup')
             }
         }
 
         signinCheck()
-    },[])
+    }, [])
 
     useEffect(() => {
         if (value) {

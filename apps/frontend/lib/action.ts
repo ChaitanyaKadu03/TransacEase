@@ -7,5 +7,5 @@ export async function SignIn() {
 }
 
 export async function SignOut() {
-  return await signOut('google')
+  return await signOut()
 }
