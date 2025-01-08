@@ -3,7 +3,7 @@ import { getToken } from "next-auth/jwt";
 
 export async function middleware(req: NextRequest) {
 
-    if (req.nextUrl.pathname.startsWith('/api/user') && !await getToken({ req, secret: process.env.NEXTAUTH_SECRET })) {
+    if (req.nextUrl.pathname.startsWith('/api/user') && !await getToken({ req, secret: process.env.AUTH_SECRET })) {
         const loginUrl = new URL("/api/auth/signin", req.url);
         return NextResponse.redirect(loginUrl);
       }
@@ -11,7 +11,7 @@ export async function middleware(req: NextRequest) {
     if (req.nextUrl.pathname.startsWith('/api/auth')) {
         const token = await getToken({
             req,
-            secret: process.env.NEXTAUTH_SECRET,
+            secret: process.env.AUTH_SECRET,
         });        
 
         if (token) {

@@ -141,11 +141,13 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
+    'https://transac-ease-frontend.vercel.app',
     'http://localhost:3000',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
+    'https://transac-ease-frontend.vercel.app',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
