@@ -67,7 +67,7 @@ export function Signup() {
                             }} required />
                         </div>
                         <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="name">Passoword</Label>
+                            <Label htmlFor="name">Password</Label>
                             <Input id="name" type="password" onChange={(e) => {
                                 set_password_input(e.currentTarget.value)
                             }} required />
